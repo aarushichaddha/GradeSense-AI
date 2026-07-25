@@ -3,51 +3,57 @@
 import React from "react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { BarChart3, TrendingUp, DollarSign, Award } from "lucide-react";
+import { BarChart3, TrendingUp, DollarSign, Award, ArrowDownRight, Zap } from "lucide-react";
 
 export default function AnalyticsPage() {
   return (
-    <div className="p-6 space-y-6 font-mono">
+    <div className="p-6 space-y-6 font-sans">
       <PageHeader
         title="Grade Transition Yield & Waste Analytics"
         subtitle="Historical performance metrics, off-spec waste reduction, and AI recommendation impact analysis."
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="p-4 bg-gray-900 border-industrial-border">
-          <div className="text-[10px] text-gray-400 font-bold uppercase">AVG TRANSITION DURATION</div>
-          <div className="text-2xl font-bold text-cyan-400 mt-1">32.4 MINS</div>
-          <div className="text-[10px] text-emerald-400 mt-1">↓ 14% Faster vs Manual Baseline</div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 font-mono">
+        <Card className="p-4 bg-white dark:bg-[#0e1424]/80 border-slate-200 dark:border-[#1e2945] shadow-xs">
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-sans">AVG TRANSITION DURATION</div>
+          <div className="text-3xl font-extrabold text-sky-700 dark:text-cyan-400 mt-1.5 font-mono">32.4 MINS</div>
+          <div className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold mt-1 font-sans flex items-center gap-1">
+            <ArrowDownRight className="w-3.5 h-3.5" /> 14% Faster vs Manual Baseline
+          </div>
         </Card>
 
-        <Card className="p-4 bg-gray-900 border-industrial-border">
-          <div className="text-[10px] text-gray-400 font-bold uppercase">MONTHLY OFF-SPEC WASTE</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1">18.5 TONS</div>
-          <div className="text-[10px] text-emerald-400 mt-1">↓ 28.2 Tons Saved by AI</div>
+        <Card className="p-4 bg-white dark:bg-[#0e1424]/80 border-slate-200 dark:border-[#1e2945] shadow-xs">
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-sans">MONTHLY OFF-SPEC WASTE</div>
+          <div className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1.5 font-mono">18.5 TONS</div>
+          <div className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold mt-1 font-sans flex items-center gap-1">
+            <ArrowDownRight className="w-3.5 h-3.5" /> 28.2 Tons Saved by AI
+          </div>
         </Card>
 
-        <Card className="p-4 bg-gray-900 border-industrial-border">
-          <div className="text-[10px] text-gray-400 font-bold uppercase">AI RECOMMENDATION ACCURACY</div>
-          <div className="text-2xl font-bold text-blue-400 mt-1">97.6%</div>
-          <div className="text-[10px] text-gray-400 mt-1">Based on 142 Grade Changes</div>
+        <Card className="p-4 bg-white dark:bg-[#0e1424]/80 border-slate-200 dark:border-[#1e2945] shadow-xs">
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-sans">AI ADVISORY ACCURACY</div>
+          <div className="text-3xl font-extrabold text-blue-700 dark:text-blue-400 mt-1.5 font-mono">97.6%</div>
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-sans">Based on 142 Grade Changes</div>
         </Card>
 
-        <Card className="p-4 bg-gray-900 border-industrial-border">
-          <div className="text-[10px] text-gray-400 font-bold uppercase">ESTIMATED SHIFT COST SAVINGS</div>
-          <div className="text-2xl font-bold text-amber-400 mt-1">$42,500</div>
-          <div className="text-[10px] text-amber-400 mt-1">Energy & Fiber Recovery</div>
+        <Card className="p-4 bg-white dark:bg-[#0e1424]/80 border-slate-200 dark:border-[#1e2945] shadow-xs">
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-sans">ESTIMATED SHIFT COST SAVINGS</div>
+          <div className="text-3xl font-extrabold text-amber-700 dark:text-amber-400 mt-1.5 font-mono">$42,500</div>
+          <div className="text-[10px] text-amber-700 dark:text-amber-400 font-bold mt-1 font-sans">Energy & Fiber Recovery</div>
         </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-blue-400" /> MONTHLY TRANSITION EFFICIENCY TREND
+          <CardTitle className="flex items-center gap-2 font-sans text-slate-800 dark:text-slate-100">
+            <BarChart3 className="w-4 h-4 text-sky-600 dark:text-cyan-400" /> MONTHLY TRANSITION EFFICIENCY & FIBER RECOVERY TREND
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="h-48 flex items-center justify-center border border-dashed border-gray-800 text-gray-500 text-xs">
-            [HISTORICAL GRADE CHANGE EFFICIENCY & FIBER SAVINGS ANALYTICS]
+        <CardContent className="p-6">
+          <div className="h-64 flex flex-col items-center justify-center border border-dashed border-slate-200 dark:border-[#1e2945] bg-slate-50 dark:bg-[#070a11]/60 rounded-xl text-slate-500 dark:text-slate-400 text-xs font-mono gap-2">
+            <Zap className="w-8 h-8 text-sky-600 dark:text-cyan-400 opacity-60" />
+            <span className="font-bold text-slate-800 dark:text-slate-300">HISTORICAL GRADE CHANGE EFFICIENCY & FIBER SAVINGS ANALYTICS</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">Aggregated 30-day TimeSeries view of machine speed optimization & waste reduction</span>
           </div>
         </CardContent>
       </Card>

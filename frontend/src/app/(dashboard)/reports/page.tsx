@@ -6,27 +6,27 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
-import { FileText, Download, Printer, CheckCircle } from "lucide-react";
+import { FileText, Download, Printer, CheckCircle2 } from "lucide-react";
 
 export default function ReportsPage() {
   const [reportGenerated, setReportGenerated] = useState(false);
 
   return (
-    <div className="p-6 space-y-6 font-mono">
+    <div className="p-6 space-y-6 font-sans">
       <PageHeader
         title="Plant Shift Reports & Transition Summaries"
         subtitle="Generate and export automated shift yield, grade change efficiency, and fiber savings reports."
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 font-mono">
         {/* Report Generator Controls */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-cyan-400">
-              <FileText className="w-4 h-4" /> GENERATE NEW REPORT
+        <Card className="border-sky-200 dark:border-[#1e2945] bg-white dark:bg-[#0e1424] shadow-xs">
+          <CardHeader className="bg-sky-50/80 dark:bg-[#0b101d] border-b border-sky-100 dark:border-[#1e2945]">
+            <CardTitle className="flex items-center gap-2 text-sky-800 dark:text-sky-300 font-sans">
+              <FileText className="w-4 h-4 text-sky-600 dark:text-sky-400" /> GENERATE NEW REPORT
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 p-5 font-sans">
             <Select
               label="Select Report Type"
               options={[
@@ -44,23 +44,23 @@ export default function ReportsPage() {
               ]}
             />
 
-            <div className="pt-2">
+            <div className="pt-2 font-mono">
               <Button
                 variant="cyan"
                 size="sm"
-                className="w-full flex items-center justify-center gap-2"
+                className="w-full flex items-center justify-center gap-2 font-mono font-bold"
                 onClick={() => setReportGenerated(true)}
               >
-                <FileText className="w-4 h-4" /> GENERATE REPORT JSON/PDF
+                <FileText className="w-4 h-4 text-white" /> GENERATE REPORT JSON/PDF
               </Button>
             </div>
 
             {reportGenerated && (
-              <div className="p-3 bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-xs">
-                <div className="font-bold flex items-center gap-1.5 mb-1">
-                  <CheckCircle className="w-4 h-4" /> REPORT GENERATED SUCCESSFUL
+              <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs rounded-xl font-mono space-y-1">
+                <div className="font-bold flex items-center gap-1.5 font-sans text-emerald-700 dark:text-emerald-400">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> REPORT GENERATION SUCCESSFUL
                 </div>
-                <div>Shift_A_Yield_Report_20260725.pdf is ready for download.</div>
+                <div className="text-[11px] font-sans">Shift_A_Yield_Report_20260725.pdf is ready for download.</div>
               </div>
             )}
           </CardContent>
@@ -69,7 +69,7 @@ export default function ReportsPage() {
         {/* Recent Generated Reports Table (2 cols) */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>RECENT GENERATED REPORTS ARCHIVE</CardTitle>
+            <CardTitle className="font-sans text-slate-800 dark:text-slate-100">RECENT GENERATED REPORTS ARCHIVE</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -85,25 +85,25 @@ export default function ReportsPage() {
               </TableHeader>
               <TableBody>
                 <TableRow>
-                  <TableCell className="font-bold text-cyan-400">RPT-901</TableCell>
-                  <TableCell>Shift A Grade Transition Yield Summary</TableCell>
-                  <TableCell>SHIFT_YIELD</TableCell>
-                  <TableCell>J. Miller</TableCell>
-                  <TableCell>2026-07-25</TableCell>
+                  <TableCell className="font-bold text-sky-700 dark:text-sky-400 font-mono">RPT-901</TableCell>
+                  <TableCell className="font-sans font-semibold text-slate-800 dark:text-slate-200">Shift A Grade Transition Yield Summary</TableCell>
+                  <TableCell className="font-mono text-slate-600 dark:text-slate-400">SHIFT_YIELD</TableCell>
+                  <TableCell className="font-sans text-slate-700 dark:text-slate-300">J. Miller</TableCell>
+                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">2026-07-25</TableCell>
                   <TableCell className="flex gap-2">
-                    <Button variant="outline" size="sm"><Download className="w-3 h-3" /></Button>
-                    <Button variant="ghost" size="sm"><Printer className="w-3 h-3" /></Button>
+                    <Button variant="outline" size="sm"><Download className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" /></Button>
+                    <Button variant="ghost" size="sm"><Printer className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" /></Button>
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="font-bold text-gray-300">RPT-900</TableCell>
-                  <TableCell>Monthly Off-Spec Waste Reduction</TableCell>
-                  <TableCell>WASTE_REDUCTION</TableCell>
-                  <TableCell>S. Chen</TableCell>
-                  <TableCell>2026-07-24</TableCell>
+                  <TableCell className="font-bold text-slate-600 dark:text-slate-400 font-mono">RPT-900</TableCell>
+                  <TableCell className="font-sans text-slate-700 dark:text-slate-300">Monthly Off-Spec Waste Reduction</TableCell>
+                  <TableCell className="font-mono text-slate-600 dark:text-slate-400">WASTE_REDUCTION</TableCell>
+                  <TableCell className="font-sans text-slate-700 dark:text-slate-300">S. Chen</TableCell>
+                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">2026-07-24</TableCell>
                   <TableCell className="flex gap-2">
-                    <Button variant="outline" size="sm"><Download className="w-3 h-3" /></Button>
-                    <Button variant="ghost" size="sm"><Printer className="w-3 h-3" /></Button>
+                    <Button variant="outline" size="sm"><Download className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" /></Button>
+                    <Button variant="ghost" size="sm"><Printer className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" /></Button>
                   </TableCell>
                 </TableRow>
               </TableBody>

@@ -1,61 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --bg-industrial: 11 15 25;
-    --card-industrial: 17 24 39;
-    --border-industrial: 55 65 81;
+    --bg-industrial: 248 250 252;
+    --card-industrial: 255 255 255;
+    --border-industrial: 226 232 240;
+    --text-industrial: 15 23 42;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', Consolas, monospace;
+  }
+
+  .dark {
+    --bg-industrial: 7 10 17;
+    --card-industrial: 14 20 36;
+    --border-industrial: 30 41 69;
+    --text-industrial: 248 250 252;
   }
 
   body {
-    background-color: #0b0f19;
-    color: #f3f4f6;
-    font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-family: var(--font-sans);
     overflow-x: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .dark body {
+    background-color: #070a11;
+    color: #f8fafc;
   }
 }
 
-/* Industrial DCS Custom Scrollbar */
+/* Modern Card Elevation */
+.light-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.dark .light-card {
+  background: #0e1424;
+  border: 1px solid #1e2945;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.light-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+}
+
+.dark .light-header {
+  background: #0b101d;
+  border-bottom: 1px solid #1e2945;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Soft Indicator Glows */
+.glow-sky {
+  box-shadow: 0 0 12px -2px rgba(2, 132, 199, 0.25);
+}
+
+.glow-blue {
+  box-shadow: 0 0 12px -2px rgba(37, 99, 235, 0.25);
+}
+
+.glow-amber {
+  box-shadow: 0 0 12px -2px rgba(217, 119, 6, 0.25);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 12px -2px rgba(5, 150, 105, 0.25);
+}
+
+.glow-violet {
+  box-shadow: 0 0 12px -2px rgba(124, 58, 237, 0.25);
+}
+
+/* Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b0f19;
+  background: #f1f5f9;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #0b101d;
 }
 ::-webkit-scrollbar-thumb {
-  background: #374151;
-  border-radius: 2px;
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e2945;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
+  background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
 
-/* High Contrast Telemetry Grid Pattern */
-.dcs-grid-pattern {
+/* Subdued Grid Pattern */
+.light-grid-pattern {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(55, 65, 81, 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(55, 65, 81, 0.15) 1px, transparent 1px);
+    linear-gradient(to right, rgba(226, 232, 240, 0.6) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 232, 240, 0.6) 1px, transparent 1px);
 }
 
-/* Alarm Pulse Animations */
+.dark .light-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(30, 41, 69, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 41, 69, 0.4) 1px, transparent 1px);
+}
+
+/* Pulse Animations */
 @keyframes alarmPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.97); }
 }
 
 .animate-alarm {
-  animation: alarmPulse 1.2s infinite ease-in-out;
-}
-
-/* Scanline Effect overlay for DCS telemetry monitors */
-.dcs-scanline {
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.25) 50%
-  );
-  background-size: 100% 4px;
+  animation: alarmPulse 1.4s infinite ease-in-out;
 }

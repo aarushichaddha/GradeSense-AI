@@ -31,26 +31,26 @@ export function AnimatedTrendChart() {
         <ComposedChart data={ANIMATED_DCS_DATA} margin={{ top: 15, right: 20, left: 0, bottom: 0 }}>
           <defs>
             <linearGradient id="moistureGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#06b6d4" stopOpacity={0.0} />
+              <stop offset="5%" stopColor="#0284c7" stopOpacity={0.25} />
+              <stop offset="95%" stopColor="#0284c7" stopOpacity={0.0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-          <XAxis dataKey="time" stroke="#9ca3af" tick={{ fill: "#9ca3af", fontSize: 10 }} />
-          <YAxis yAxisId="left" stroke="#9ca3af" domain={[4, 9]} tick={{ fill: "#9ca3af", fontSize: 10 }} />
-          <YAxis yAxisId="right" orientation="right" stroke="#9ca3af" domain={[70, 90]} tick={{ fill: "#9ca3af", fontSize: 10 }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <XAxis dataKey="time" stroke="#94a3b8" tick={{ fill: "#475569", fontSize: 10 }} />
+          <YAxis yAxisId="left" stroke="#94a3b8" domain={[4, 9]} tick={{ fill: "#475569", fontSize: 10 }} />
+          <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" domain={[70, 90]} tick={{ fill: "#475569", fontSize: 10 }} />
           <Tooltip
-            contentStyle={{ backgroundColor: "#111827", borderColor: "#374151", color: "#f3f4f6", fontSize: "11px" }}
+            contentStyle={{ backgroundColor: "#ffffff", borderColor: "#cbd5e1", color: "#0f172a", fontSize: "11px", borderRadius: "8px", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)" }}
           />
           <Legend wrapperStyle={{ fontSize: "11px", paddingTop: "10px" }} />
-          <ReferenceLine yAxisId="left" y={6.8} label="SP Target (6.8%)" stroke="#10b981" strokeDasharray="4 4" />
+          <ReferenceLine yAxisId="left" y={6.8} label={{ value: "SP Target (6.8%)", fill: "#059669", fontSize: 10 }} stroke="#059669" strokeDasharray="4 4" />
           
           <Area
             yAxisId="left"
             type="monotone"
             dataKey="actualMoisture"
             name="Reel Moisture (%)"
-            stroke="#06b6d4"
+            stroke="#0284c7"
             fill="url(#moistureGradient)"
             strokeWidth={2.5}
             isAnimationActive={true}
@@ -61,9 +61,9 @@ export function AnimatedTrendChart() {
             type="monotone"
             dataKey="basisWeight"
             name="Basis Weight (g/m²)"
-            stroke="#3b82f6"
+            stroke="#2563eb"
             strokeWidth={2}
-            dot={{ r: 3 }}
+            dot={{ r: 4, fill: "#2563eb" }}
             isAnimationActive={true}
             animationDuration={1500}
           />
@@ -72,7 +72,7 @@ export function AnimatedTrendChart() {
             type="monotone"
             dataKey="steamPressure"
             name="Steam Pressure (bar)"
-            stroke="#f59e0b"
+            stroke="#d97706"
             strokeWidth={1.5}
             strokeDasharray="4 4"
             isAnimationActive={true}
@@ -83,3 +83,5 @@ export function AnimatedTrendChart() {
     </div>
   );
 }
+
+

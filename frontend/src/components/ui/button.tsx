@@ -2,21 +2,22 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "outline" | "danger" | "warning" | "ghost" | "cyan";
+  variant?: "default" | "outline" | "danger" | "warning" | "ghost" | "cyan" | "violet";
   size?: "sm" | "md" | "lg";
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "default", size = "md", children, ...props }, ref) => {
-    const baseStyle = "inline-flex items-center justify-center font-mono font-medium tracking-wide transition-all focus:outline-none focus:ring-1 border active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none rounded-none";
+    const baseStyle = "inline-flex items-center justify-center font-mono font-semibold tracking-wide transition-all focus:outline-none focus:ring-2 focus:ring-sky-500/30 border active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none rounded-lg cursor-pointer";
 
     const variants = {
-      default: "bg-blue-600 hover:bg-blue-500 text-white border-blue-500 shadow-sm",
-      outline: "bg-industrial-panel hover:bg-industrial-border text-industrial-text border-industrial-border",
-      danger: "bg-red-700 hover:bg-red-600 text-white border-red-500 shadow-sm",
-      warning: "bg-amber-600 hover:bg-amber-500 text-black border-amber-400 font-semibold",
-      cyan: "bg-cyan-600 hover:bg-cyan-500 text-black border-cyan-400 font-semibold",
-      ghost: "bg-transparent hover:bg-industrial-panel text-industrial-muted hover:text-white border-transparent",
+      default: "bg-sky-600 hover:bg-sky-700 text-white border-sky-600 shadow-xs hover:shadow-sm",
+      outline: "bg-white dark:bg-[#0e1424] hover:bg-slate-50 dark:hover:bg-[#141c30] text-slate-700 dark:text-slate-300 border-slate-300 dark:border-[#1e2945] hover:border-slate-400 dark:hover:border-sky-800 shadow-2xs",
+      danger: "bg-red-600 hover:bg-red-700 text-white border-red-600 shadow-xs hover:shadow-sm",
+      warning: "bg-amber-600 hover:bg-amber-700 text-white border-amber-600 font-bold shadow-xs hover:shadow-sm",
+      cyan: "bg-sky-600 hover:bg-sky-700 text-white border-sky-600 font-bold shadow-xs hover:shadow-sm",
+      violet: "bg-violet-600 hover:bg-violet-700 text-white border-violet-600 font-bold shadow-xs hover:shadow-sm",
+      ghost: "bg-transparent hover:bg-slate-100 dark:hover:bg-[#141c30] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border-transparent",
     };
 
     const sizes = {

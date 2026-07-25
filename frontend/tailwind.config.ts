@@ -11,24 +11,31 @@ const config: Config = {
     extend: {
       colors: {
         industrial: {
-          bg: "#0b0f19",
-          card: "#111827",
-          panel: "#1f2937",
-          border: "#374151",
-          accent: "#3b82f6",
-          text: "#f3f4f6",
-          muted: "#9ca3af",
-          // Honeywell / DCS Status Colors
-          normal: "#10b981",    // Safety Green
-          warning: "#f59e0b",   // Alarm Amber
-          critical: "#ef4444",  // Emergency Red
-          standby: "#6b7280",   // Slate Standby
-          cyan: "#06b6d4",      // Process Cyan
+          bg: "#f8fafc",
+          card: "#ffffff",
+          panel: "#f1f5f9",
+          border: "#e2e8f0",
+          accent: "#0284c7",
+          text: "#0f172a",
+          muted: "#64748b",
+          // Light Mode Status Colors (WCAG Compliant)
+          normal: "#059669",    // Emerald-600
+          warning: "#d97706",   // Amber-600
+          critical: "#dc2626",  // Red-600
+          standby: "#64748b",   // Slate-500
+          cyan: "#0284c7",      // Sky-600 Process Accent
+          violet: "#7c3aed",    // Violet-600 AI Accent
         },
       },
       fontFamily: {
-        mono: ["Consolas", "Monaco", "Courier New", "monospace"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["'JetBrains Mono'", "Consolas", "Monaco", "monospace"],
+        sans: ["'Plus Jakarta Sans'", "system-ui", "-apple-system", "sans-serif"],
+      },
+      boxShadow: {
+        'glow-sky': '0 0 12px -2px rgba(2, 132, 199, 0.2)',
+        'glow-blue': '0 0 12px -2px rgba(37, 99, 235, 0.2)',
+        'glow-amber': '0 0 12px -2px rgba(217, 119, 6, 0.2)',
+        'glow-emerald': '0 0 12px -2px rgba(5, 150, 105, 0.2)',
       },
     },
   },
