@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "gradesense-ai-backend"
+version = "1.0.0"
+description = "FastAPI Clean Architecture Backend for GradeSense AI"
+authors = ["Industrial AI Engineering <ai-engineering@honeywell.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.0"
+uvicorn = {extras = ["standard"], version = "^0.30.0"}
+pydantic = "^2.8.0"
+pydantic-settings = "^2.4.0"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.30"}
+asyncpg = "^0.29.0"
+alembic = "^1.13.0"
+pyjwt = "^2.9.0"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

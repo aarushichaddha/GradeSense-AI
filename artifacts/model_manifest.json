@@ -1,0 +1,219 @@
+{
+  "active_model": "LightGBM",
+  "feature_columns": [
+    "stock_flow_lpm",
+    "steam_pressure_bar",
+    "machine_speed_mpm",
+    "moisture_pct",
+    "basis_weight_gsm",
+    "ash_pct",
+    "caliper_um",
+    "transition_time_min",
+    "delta_basis_weight",
+    "delta_speed",
+    "delta_steam",
+    "delta_moisture_target",
+    "steam_per_speed",
+    "basis_weight_per_flow",
+    "moisture_steam_ratio",
+    "speed_per_caliper",
+    "ash_basis_interaction",
+    "recipe_similarity_score",
+    "transition_momentum",
+    "historical_offspec_rate",
+    "caliper_variance_proxy",
+    "drying_adequacy_ratio",
+    "headbox_loading",
+    "recipe_delta_magnitude",
+    "speed_pressure_interaction"
+  ],
+  "scaler_path": "C:\\Users\\Lenovo\\Desktop\\Honeywell\\artifacts\\scaler.joblib",
+  "models": {
+    "RandomForest": {
+      "version": "randomforest_v1",
+      "artifact_path": "C:\\Users\\Lenovo\\Desktop\\Honeywell\\artifacts\\RandomForest_model.joblib",
+      "metrics": {
+        "accuracy": 0.84,
+        "precision_macro": 0.8009569377990431,
+        "recall_macro": 0.8518684269411502,
+        "f1_macro": 0.8161764705882353,
+        "f1_weighted": 0.8461764705882353,
+        "roc_auc": 0.945177892145894,
+        "cv_f1_mean": 0.8477672023625052,
+        "cv_f1_std": 0.029102788923363144,
+        "cv_f1_scores": [
+          0.8735810113519091,
+          0.8447893569844789,
+          0.7941055356197424,
+          0.8733031674208145,
+          0.8530569404355812
+        ],
+        "confusion_matrix_raw": [
+          [
+            90,
+            19
+          ],
+          [
+            5,
+            36
+          ]
+        ],
+        "confusion_matrix_normalised": [
+          [
+            0.8257,
+            0.1743
+          ],
+          [
+            0.122,
+            0.878
+          ]
+        ],
+        "feature_importances": {
+          "drying_adequacy_ratio": 0.24696941865526995,
+          "moisture_steam_ratio": 0.1432815735050327,
+          "steam_per_speed": 0.08762077782032604,
+          "steam_pressure_bar": 0.0708789274207169,
+          "transition_momentum": 0.056644037771311606,
+          "basis_weight_gsm": 0.056632609595021866,
+          "recipe_similarity_score": 0.040673313741364174,
+          "historical_offspec_rate": 0.03912477510603859,
+          "basis_weight_per_flow": 0.0324336009946875,
+          "recipe_delta_magnitude": 0.02495253443166677,
+          "moisture_pct": 0.023142667111786953,
+          "machine_speed_mpm": 0.02288852741487767,
+          "transition_time_min": 0.020024655909865668,
+          "delta_basis_weight": 0.018512468953767312,
+          "speed_pressure_interaction": 0.01850869263783195
+        },
+        "n_train_samples": 700,
+        "n_test_samples": 150,
+        "training_duration_sec": 0.5407095999980811
+      },
+      "is_active": false
+    },
+    "XGBoost": {
+      "version": "xgboost_v1",
+      "artifact_path": "C:\\Users\\Lenovo\\Desktop\\Honeywell\\artifacts\\XGBoost_model.joblib",
+      "metrics": {
+        "accuracy": 0.8866666666666667,
+        "precision_macro": 0.8504901960784313,
+        "recall_macro": 0.8839785186842695,
+        "f1_macro": 0.8642100218328984,
+        "f1_weighted": 0.8892436586967712,
+        "roc_auc": 0.9742671738643991,
+        "cv_f1_mean": 0.8912529550685026,
+        "cv_f1_std": 0.03555528093111262,
+        "cv_f1_scores": [
+          0.9536761299715439,
+          0.8835647111509181,
+          0.8715674882270197,
+          0.8998373983739838,
+          0.8476190476190477
+        ],
+        "confusion_matrix_raw": [
+          [
+            97,
+            12
+          ],
+          [
+            5,
+            36
+          ]
+        ],
+        "confusion_matrix_normalised": [
+          [
+            0.8899,
+            0.1101
+          ],
+          [
+            0.122,
+            0.878
+          ]
+        ],
+        "feature_importances": {
+          "drying_adequacy_ratio": 0.20928955078125,
+          "moisture_steam_ratio": 0.1262696534395218,
+          "transition_momentum": 0.07215055078268051,
+          "steam_per_speed": 0.047847963869571686,
+          "recipe_similarity_score": 0.046380236744880676,
+          "historical_offspec_rate": 0.04315908998250961,
+          "basis_weight_gsm": 0.03672734647989273,
+          "recipe_delta_magnitude": 0.03495272621512413,
+          "transition_time_min": 0.03120984323322773,
+          "ash_basis_interaction": 0.03011430986225605,
+          "machine_speed_mpm": 0.02961549535393715,
+          "moisture_pct": 0.028168242424726486,
+          "speed_pressure_interaction": 0.02598525770008564,
+          "steam_pressure_bar": 0.025295082479715347,
+          "caliper_um": 0.024233931675553322
+        },
+        "n_train_samples": 700,
+        "n_test_samples": 150,
+        "training_duration_sec": 0.4820239999971818
+      },
+      "is_active": false
+    },
+    "LightGBM": {
+      "version": "lightgbm_v1",
+      "artifact_path": "C:\\Users\\Lenovo\\Desktop\\Honeywell\\artifacts\\LightGBM_model.joblib",
+      "metrics": {
+        "accuracy": 0.9066666666666666,
+        "precision_macro": 0.8789393610084764,
+        "recall_macro": 0.8901320205862608,
+        "f1_macro": 0.8842592592592593,
+        "f1_weighted": 0.9073456790123456,
+        "roc_auc": 0.9684493175206981,
+        "cv_f1_mean": 0.8858249986907545,
+        "cv_f1_std": 0.02632217731884597,
+        "cv_f1_scores": [
+          0.9238095238095239,
+          0.8691239316239316,
+          0.8501165060772089,
+          0.906517094017094,
+          0.8795579379260141
+        ],
+        "confusion_matrix_raw": [
+          [
+            101,
+            8
+          ],
+          [
+            6,
+            35
+          ]
+        ],
+        "confusion_matrix_normalised": [
+          [
+            0.9266,
+            0.0734
+          ],
+          [
+            0.1463,
+            0.8537
+          ]
+        ],
+        "feature_importances": {
+          "historical_offspec_rate": 1219.0,
+          "moisture_steam_ratio": 1210.0,
+          "drying_adequacy_ratio": 1047.0,
+          "transition_momentum": 990.0,
+          "recipe_similarity_score": 945.0,
+          "delta_basis_weight": 786.0,
+          "transition_time_min": 753.0,
+          "recipe_delta_magnitude": 745.0,
+          "delta_speed": 657.0,
+          "moisture_pct": 564.0,
+          "steam_pressure_bar": 553.0,
+          "basis_weight_gsm": 532.0,
+          "steam_per_speed": 496.0,
+          "delta_steam": 488.0,
+          "machine_speed_mpm": 486.0
+        },
+        "n_train_samples": 700,
+        "n_test_samples": 150,
+        "training_duration_sec": 1.178480300004594
+      },
+      "is_active": true
+    }
+  }
+}

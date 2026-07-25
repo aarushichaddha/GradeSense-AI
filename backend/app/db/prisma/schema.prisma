@@ -1,0 +1,288 @@
+// Prisma Schema for GradeSense AI Database Structure
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum StatusLevel {
+  NORMAL
+  WARNING
+  CRITICAL
+  STANDBY
+}
+
+enum TransitionStatus {
+  SCHEDULED
+  IN_TRANSITION
+  STABILIZING
+  COMPLETED
+  ABORTED
+}
+
+enum AdvisoryStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  AUTO_APPLIED
+}
+
+model Role {
+  id          String    @id @default(uuid()) @db.Uuid
+  code        String    @unique
+  name        String
+  permissions Json      @default("[]")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  users       User[]
+
+  @@map("roles")
+}
+
+model User {
+  id             String         @id @default(uuid()) @db.Uuid
+  roleId         String         @map("role_id") @db.Uuid
+  username       String         @unique
+  email          String         @unique
+  fullName       String         @map("full_name")
+  hashedPassword String         @map("hashed_password")
+  plantSection   String         @default("Paper Mill #04") @map("plant_section")
+  isActive       Boolean        @default(true) @map("is_active")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  deletedAt      DateTime?      @map("deleted_at")
+  role           Role           @relation(fields: [roleId], references: [id])
+  reports        Report[]
+  notifications  Notification[]
+  auditLogs      AuditLog[]
+
+  @@map("users")
+}
+
+model Machine {
+  id               String            @id @default(uuid()) @db.Uuid
+  code             String            @unique
+  name             String
+  plantLocation    String            @map("plant_location")
+  maxSpeedMpm      Float             @default(1500.0) @map("max_speed_mpm")
+  isActive         Boolean           @default(true) @map("is_active")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  deletedAt        DateTime?         @map("deleted_at")
+  recipes          Recipe[]
+  sensorData       SensorData[]
+  gradeTransitions GradeTransition[]
+  historicalData   HistoricalData[]
+
+  @@map("machines")
+}
+
+model PaperGrade {
+  id                    String            @id @default(uuid()) @db.Uuid
+  code                  String            @unique
+  name                  String
+  targetBasisWeightGsm  Float             @map("target_basis_weight_gsm")
+  targetMoisturePercent Float             @map("target_moisture_percent")
+  targetTensileMd       Float             @map("target_tensile_md")
+  targetCaliperMicrons  Float             @map("target_caliper_microns")
+  createdAt             DateTime          @default(now()) @map("created_at")
+  updatedAt             DateTime          @updatedAt @map("updated_at")
+  deletedAt             DateTime?         @map("deleted_at")
+  recipes               Recipe[]
+  sourceTransitions     GradeTransition[] @relation("SourceGrade")
+  targetTransitions     GradeTransition[] @relation("TargetGrade")
+
+  @@map("paper_grades")
+}
+
+model Recipe {
+  id             String     @id @default(uuid()) @db.Uuid
+  machineId      String     @map("machine_id") @db.Uuid
+  paperGradeId   String     @map("paper_grade_id") @db.Uuid
+  setpointTargets Json      @map("setpoint_targets")
+  isActive       Boolean    @default(true) @map("is_active")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+  deletedAt      DateTime?  @map("deleted_at")
+  machine        Machine    @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  paperGrade     PaperGrade @relation(fields: [paperGradeId], references: [id], onDelete: Cascade)
+
+  @@map("recipes")
+}
+
+model SensorData {
+  id        String    @default(uuid()) @db.Uuid
+  machineId String    @map("machine_id") @db.Uuid
+  tag       String
+  name      String
+  value     Float
+  unit      String
+  status    String    @default("NORMAL")
+  timestamp DateTime  @default(now())
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  machine   Machine   @relation(fields: [machineId], references: [id], onDelete: Cascade)
+
+  @@id([id, timestamp])
+  @@map("sensor_data")
+}
+
+model GradeTransition {
+  id                       String           @id @default(uuid()) @db.Uuid
+  machineId                String           @map("machine_id") @db.Uuid
+  sourceGradeId            String           @map("source_grade_id") @db.Uuid
+  targetGradeId            String           @map("target_grade_id") @db.Uuid
+  status                   TransitionStatus @default(SCHEDULED)
+  progressPercent          Float            @default(0.0) @map("progress_percent")
+  predictedWasteTons       Float            @default(0.0) @map("predicted_waste_tons")
+  startTime                DateTime         @default(now()) @map("start_time")
+  estimatedCompletionTime DateTime?        @map("estimated_completion_time")
+  actualCompletionTime    DateTime?        @map("actual_completion_time")
+  createdAt                DateTime         @default(now()) @map("created_at")
+  updatedAt                DateTime         @updatedAt @map("updated_at")
+  deletedAt                DateTime?        @map("deleted_at")
+  machine                  Machine          @relation(fields: [machineId], references: [id])
+  sourceGrade              PaperGrade       @relation("SourceGrade", fields: [sourceGradeId], references: [id])
+  targetGrade              PaperGrade       @relation("TargetGrade", fields: [targetGradeId], references: [id])
+  predictions              Prediction[]
+  recommendations          Recommendation[]
+  alerts                   Alert[]
+
+  @@map("grade_transitions")
+}
+
+model AIModel {
+  id            String       @id @default(uuid()) @db.Uuid
+  name          String
+  version       String       @unique
+  modelType     String       @map("model_type")
+  accuracyScore Float        @default(0.0) @map("accuracy_score")
+  artifactPath  String       @map("artifact_path")
+  isActive      Boolean      @default(true) @map("is_active")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  deletedAt     DateTime?    @map("deleted_at")
+  predictions   Prediction[]
+
+  @@map("ai_models")
+}
+
+model Prediction {
+  id                String            @id @default(uuid()) @db.Uuid
+  gradeTransitionId String            @map("grade_transition_id") @db.Uuid
+  aiModelId         String            @map("ai_model_id") @db.Uuid
+  parameterName     String            @map("parameter_name")
+  predictedValue    Float             @map("predicted_value")
+  confidenceScore   Float             @map("confidence_score")
+  horizonTime       DateTime          @map("horizon_time")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  deletedAt         DateTime?         @map("deleted_at")
+  gradeTransition   GradeTransition   @relation(fields: [gradeTransitionId], references: [id], onDelete: Cascade)
+  aiModel           AIModel           @relation(fields: [aiModelId], references: [id])
+  recommendations   Recommendation[]
+  alerts            Alert[]
+
+  @@map("predictions")
+}
+
+model Recommendation {
+  id                  String           @id @default(uuid()) @db.Uuid
+  gradeTransitionId   String           @map("grade_transition_id") @db.Uuid
+  predictionId        String?          @map("prediction_id") @db.Uuid
+  parameterToAdjust   String           @map("parameter_to_adjust")
+  currentSetting      String           @map("current_setting")
+  recommendedSetting  String           @map("recommended_setting")
+  unit                String
+  confidenceScore     Float            @map("confidence_score")
+  status              AdvisoryStatus   @default(PENDING)
+  createdAt           DateTime         @default(now()) @map("created_at")
+  updatedAt           DateTime         @updatedAt @map("updated_at")
+  deletedAt           DateTime?        @map("deleted_at")
+  gradeTransition     GradeTransition  @relation(fields: [gradeTransitionId], references: [id], onDelete: Cascade)
+  prediction          Prediction?      @relation(fields: [predictionId], references: [id])
+
+  @@map("recommendations")
+}
+
+model Alert {
+  id                String           @id @default(uuid()) @db.Uuid
+  gradeTransitionId String?          @map("grade_transition_id") @db.Uuid
+  predictionId      String?          @map("prediction_id") @db.Uuid
+  severity          StatusLevel      @default(WARNING)
+  parameterName     String           @map("parameter_name")
+  message           String
+  status            String           @default("DETECTED")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+  deletedAt         DateTime?        @map("deleted_at")
+  gradeTransition   GradeTransition? @relation(fields: [gradeTransitionId], references: [id], onDelete: Cascade)
+  prediction        Prediction?      @relation(fields: [predictionId], references: [id])
+
+  @@map("alerts")
+}
+
+model HistoricalData {
+  id         String    @default(uuid()) @db.Uuid
+  machineId  String    @map("machine_id") @db.Uuid
+  metricName String    @map("metric_name")
+  avgValue   Float     @map("avg_value")
+  minValue   Float     @map("min_value")
+  maxValue   Float     @map("max_value")
+  timestamp  DateTime  @default(now())
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  machine    Machine   @relation(fields: [machineId], references: [id], onDelete: Cascade)
+
+  @@id([id, timestamp])
+  @@map("historical_data")
+}
+
+model Report {
+  id                String    @id @default(uuid()) @db.Uuid
+  generatedByUserId String    @map("generated_by_user_id") @db.Uuid
+  title             String
+  reportType        String    @map("report_type")
+  summaryData       Json      @map("summary_data")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  deletedAt         DateTime? @map("deleted_at")
+  user              User      @relation(fields: [generatedByUserId], references: [id])
+
+  @@map("reports")
+}
+
+model Notification {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  title     String
+  message   String
+  isRead    Boolean   @default(false) @map("is_read")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String?   @map("user_id") @db.Uuid
+  action       String
+  targetEntity String    @map("target_entity")
+  details      Json      @default("{}")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+  user         User?     @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
