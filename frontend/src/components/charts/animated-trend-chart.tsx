@@ -13,6 +13,7 @@ import {
   Legend,
   ReferenceLine,
 } from "recharts";
+import { useTheme } from "@/context/theme-context";
 
 const ANIMATED_DCS_DATA = [
   { time: "14:00", actualMoisture: 5.2, targetMoisture: 6.8, basisWeight: 78.0, steamPressure: 3.2 },
@@ -25,32 +26,41 @@ const ANIMATED_DCS_DATA = [
 ];
 
 export function AnimatedTrendChart() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
+
+  const gridColor = isLight ? "#cbd5e1" : "#374151";
+  const textColor = isLight ? "#475569" : "#9ca3af";
+  const tooltipBg = isLight ? "#ffffff" : "#111827";
+  const tooltipBorder = isLight ? "#cbd5e1" : "#374151";
+  const tooltipText = isLight ? "#0f172a" : "#f3f4f6";
+
   return (
     <div className="w-full h-72 font-mono text-xs">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={ANIMATED_DCS_DATA} margin={{ top: 15, right: 20, left: 0, bottom: 0 }}>
           <defs>
             <linearGradient id="moistureGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#0284c7" stopOpacity={0.25} />
-              <stop offset="95%" stopColor="#0284c7" stopOpacity={0.0} />
+              <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#06b6d4" stopOpacity={0.0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis dataKey="time" stroke="#94a3b8" tick={{ fill: "#475569", fontSize: 10 }} />
-          <YAxis yAxisId="left" stroke="#94a3b8" domain={[4, 9]} tick={{ fill: "#475569", fontSize: 10 }} />
-          <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" domain={[70, 90]} tick={{ fill: "#475569", fontSize: 10 }} />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+          <XAxis dataKey="time" stroke={textColor} tick={{ fill: textColor, fontSize: 10 }} />
+          <YAxis yAxisId="left" stroke={textColor} domain={[4, 9]} tick={{ fill: textColor, fontSize: 10 }} />
+          <YAxis yAxisId="right" orientation="right" stroke={textColor} domain={[70, 90]} tick={{ fill: textColor, fontSize: 10 }} />
           <Tooltip
-            contentStyle={{ backgroundColor: "#ffffff", borderColor: "#cbd5e1", color: "#0f172a", fontSize: "11px", borderRadius: "8px", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)" }}
+            contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, color: tooltipText, fontSize: "11px" }}
           />
-          <Legend wrapperStyle={{ fontSize: "11px", paddingTop: "10px" }} />
-          <ReferenceLine yAxisId="left" y={6.8} label={{ value: "SP Target (6.8%)", fill: "#059669", fontSize: 10 }} stroke="#059669" strokeDasharray="4 4" />
+          <Legend wrapperStyle={{ fontSize: "11px", paddingTop: "10px", color: textColor }} />
+          <ReferenceLine yAxisId="left" y={6.8} label={{ value: "SP Target (6.8%)", fill: "#10b981", fontSize: 10 }} stroke="#10b981" strokeDasharray="4 4" />
           
           <Area
             yAxisId="left"
             type="monotone"
             dataKey="actualMoisture"
             name="Reel Moisture (%)"
-            stroke="#0284c7"
+            stroke="#06b6d4"
             fill="url(#moistureGradient)"
             strokeWidth={2.5}
             isAnimationActive={true}
@@ -61,9 +71,9 @@ export function AnimatedTrendChart() {
             type="monotone"
             dataKey="basisWeight"
             name="Basis Weight (g/m²)"
-            stroke="#2563eb"
+            stroke="#3b82f6"
             strokeWidth={2}
-            dot={{ r: 4, fill: "#2563eb" }}
+            dot={{ r: 3 }}
             isAnimationActive={true}
             animationDuration={1500}
           />
@@ -72,7 +82,7 @@ export function AnimatedTrendChart() {
             type="monotone"
             dataKey="steamPressure"
             name="Steam Pressure (bar)"
-            stroke="#d97706"
+            stroke="#f59e0b"
             strokeWidth={1.5}
             strokeDasharray="4 4"
             isAnimationActive={true}
@@ -83,5 +93,3 @@ export function AnimatedTrendChart() {
     </div>
   );
 }
-
-

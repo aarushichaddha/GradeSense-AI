@@ -4,241 +4,168 @@ import React, { useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
-import { UploadCloud, FileSpreadsheet, Radio, Database, CheckCircle2, RefreshCw, AlertCircle, Cpu } from "lucide-react";
+import { UploadCloud, FileSpreadsheet, CheckCircle2, Play } from "lucide-react";
 
 export default function DataIngestionPage() {
-  const [file, setFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [fileSize, setFileSize] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [cleaningStatus, setCleaningStatus] = useState("");
-  const [uploadCompleted, setUploadCompleted] = useState(false);
+  const [statusMsg, setStatusMsg] = useState("");
+  const [completed, setCompleted] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const f = e.target.files[0];
+      setFileName(f.name);
+      setFileSize(`${(f.size / 1024).toFixed(1)} KB`);
+      setCompleted(false);
     }
   };
 
-  const handleSimulatedUpload = () => {
-    if (!file) return;
+  const handleUseSample = () => {
+    setFileName("opc_ua_telemetry_pm01_sample.csv");
+    setFileSize("2,480 KB");
+    setCompleted(false);
+  };
+
+  const handleUpload = () => {
+    if (!fileName) return;
     setUploading(true);
-    setUploadCompleted(false);
-    setProgress(15);
-    setCleaningStatus("Extracting raw dataframe via Format Adapter...");
+    setCompleted(false);
+    setProgress(20);
+    setStatusMsg("Parsing raw CSV dataset...");
 
     setTimeout(() => {
-      setProgress(45);
-      setCleaningStatus("Removing duplicate (tag, timestamp) records...");
-    }, 1000);
-
-    setTimeout(() => {
-      setProgress(75);
-      setCleaningStatus("Executing Z-Score 3σ outlier detection & value normalization...");
-    }, 2000);
+      setProgress(60);
+      setStatusMsg("Removing duplicate timestamps & filtering outliers...");
+    }, 800);
 
     setTimeout(() => {
       setProgress(100);
-      setCleaningStatus("ETL Pipeline completed. Data stored in partitioned PostgreSQL table.");
+      setStatusMsg("ETL Pipeline complete. 1,420 process samples ingested.");
       setUploading(false);
-      setUploadCompleted(true);
-    }, 3200);
+      setCompleted(true);
+    }, 1800);
   };
 
   return (
-    <div className="p-6 space-y-6 font-sans">
+    <div className="p-8 space-y-8 font-sans max-w-7xl mx-auto">
       <PageHeader
-        title="DCS Telemetry Ingestion & Automated ETL Pipeline"
-        subtitle="Upload CSV/Excel telemetry or monitor high-frequency streams from Sensor REST API, MQTT, and OPC-UA DCS servers."
+        title="Data Ingestion & Automated ETL Pipeline"
+        subtitle="Upload historical telemetry CSV/Excel datasets or connect high-frequency sensor streams."
       />
 
-      {/* Protocol Adapters Status Banner */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
-        <Card className="p-4 bg-white dark:bg-[#0e1424]/80 border-slate-200 dark:border-[#1e2945] shadow-xs">
-          <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-sans">
-            <span>FILE ADAPTER (CSV / EXCEL)</span>
-            <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          </div>
-          <div className="text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1.5 font-mono">ACTIVE</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-sans">Parses .csv, .xlsx, .xls</div>
-        </Card>
+      {/* 12-Column Grid Layout */}
+      <div className="grid grid-cols-12 gap-6">
+        {/* Drag & Drop File Upload Box (col-span-4) */}
+        <div className="col-span-12 lg:col-span-4">
+          <Card className="h-full bg-industrial-card border-industrial-border">
+            <CardHeader className="py-4 px-6 border-b border-industrial-border">
+              <CardTitle className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                <UploadCloud className="w-4 h-4 text-blue-400" />
+                Upload Telemetry File
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4 text-xs font-sans">
+              <div className="border-2 border-dashed border-industrial-border hover:border-blue-500/50 p-6 text-center rounded-xl transition-colors bg-industrial-bg relative">
+                <FileSpreadsheet className="w-8 h-8 text-blue-400 mx-auto mb-3" />
+                <p className="text-zinc-200 font-semibold mb-1">Drag and drop CSV or Excel file</p>
+                <p className="text-xs text-zinc-400 mb-4 font-normal">Supports .csv, .xlsx up to 50MB</p>
 
-        <Card className="p-4 bg-white dark:bg-[#0e1424]/80 border-slate-200 dark:border-[#1e2945] shadow-xs">
-          <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-sans">
-            <span>SENSOR REST API</span>
-            <Radio className="w-4 h-4 text-sky-600 dark:text-cyan-400" />
-          </div>
-          <div className="text-xl font-extrabold text-sky-700 dark:text-cyan-400 mt-1.5 font-mono">ONLINE</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-sans">POST /api/v1/ingestion/stream</div>
-        </Card>
+                <div className="flex flex-col gap-2 items-center justify-center">
+                  <label className="cursor-pointer bg-industrial-panel border border-industrial-border text-zinc-200 px-4 py-2 rounded-xl hover:border-zinc-500 transition-colors inline-block text-xs font-semibold">
+                    Browse Files
+                    <input type="file" accept=".csv,.xlsx,.xls" onChange={handleFileChange} className="hidden" />
+                  </label>
 
-        <Card className="p-4 bg-white dark:bg-[#0e1424]/80 border-slate-200 dark:border-[#1e2945] shadow-xs">
-          <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-sans">
-            <span>MQTT BROKER ADAPTER</span>
-            <Cpu className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-          </div>
-          <div className="text-xl font-extrabold text-amber-700 dark:text-amber-400 mt-1.5 font-mono">READY</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-sans">Topic: dcs/telemetry/#</div>
-        </Card>
-
-        <Card className="p-4 bg-white dark:bg-[#0e1424]/80 border-slate-200 dark:border-[#1e2945] shadow-xs">
-          <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-sans">
-            <span>OPC-UA DCS ADAPTER</span>
-            <Database className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-          </div>
-          <div className="text-xl font-extrabold text-indigo-700 dark:text-indigo-300 mt-1.5 font-mono">CONNECTED</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-sans">opc.tcp://experion-dcs:4840</div>
-        </Card>
-      </div>
-
-      {/* Main Ingestion & Upload Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 font-mono">
-        {/* Upload Box & ETL Progress (1 col) */}
-        <Card className="border-sky-300 dark:border-cyan-500/50 bg-white dark:bg-[#0e1424] shadow-xs">
-          <CardHeader className="bg-sky-50/80 dark:bg-cyan-950/30 border-b border-sky-100 dark:border-[#1e2945]">
-            <CardTitle className="flex items-center gap-2 text-sky-800 dark:text-cyan-400 font-sans">
-              <UploadCloud className="w-4 h-4" /> TELEMETRY FILE INGESTION
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-xs p-5">
-            <Select
-              label="Target Paper Machine"
-              options={[
-                { label: "PM-01 Paper Machine (Fine Writing)", value: "PM-01" },
-                { label: "PM-02 Paper Machine (Linerboard)", value: "PM-02" },
-              ]}
-            />
-
-            {/* Drag and Drop Zone */}
-            <div className="border-2 border-dashed border-slate-300 dark:border-[#1e2945] bg-slate-50/80 dark:bg-[#070a11]/80 rounded-xl p-6 text-center space-y-2 hover:border-sky-500 dark:hover:border-cyan-500 transition-colors">
-              <FileSpreadsheet className="w-8 h-8 text-sky-600 dark:text-cyan-400 mx-auto" />
-              <div className="text-slate-800 dark:text-slate-200 font-bold font-sans">
-                {file ? file.name : "Drag & Drop CSV or Excel (.xlsx) file here"}
+                  <button
+                    type="button"
+                    onClick={handleUseSample}
+                    className="text-xs text-blue-400 hover:underline font-medium cursor-pointer"
+                  >
+                    Or use sample DCS dataset
+                  </button>
+                </div>
               </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">Maximum file size: 50 MB per batch upload</p>
-              <input
-                type="file"
-                accept=".csv, .xlsx, .xls"
-                onChange={handleFileChange}
-                className="hidden"
-                id="file-upload-input"
-              />
-              <label htmlFor="file-upload-input">
-                <Button variant="outline" size="sm" type="button" className="mt-2 cursor-pointer font-mono">
-                  BROWSE FILE
-                </Button>
-              </label>
-            </div>
 
-            {/* Upload Button */}
-            <Button
-              variant="cyan"
-              size="sm"
-              className="w-full flex items-center justify-center gap-2 font-mono font-bold"
-              disabled={!file || uploading}
-              onClick={handleSimulatedUpload}
-            >
-              {uploading ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" /> EXECUTING ETL CLEANING...
-                </>
-              ) : (
-                <>
-                  <UploadCloud className="w-4 h-4" /> START AUTOMATED ETL PIPELINE ➔
-                </>
+              {fileName && (
+                <div className="p-4 bg-industrial-bg border border-industrial-border rounded-xl space-y-3 font-sans">
+                  <div className="flex justify-between items-center text-zinc-200 font-semibold">
+                    <span className="truncate">{fileName}</span>
+                    <span className="text-zinc-400 text-xs font-normal">{fileSize}</span>
+                  </div>
+
+                  {uploading && (
+                    <div className="space-y-2">
+                      <div className="h-2 w-full bg-industrial-panel rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500 transition-all duration-300 rounded-full" style={{ width: `${progress}%` }} />
+                      </div>
+                      <span className="text-xs text-blue-400 font-medium">{statusMsg}</span>
+                    </div>
+                  )}
+
+                  {completed && (
+                    <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
+                      {statusMsg}
+                    </div>
+                  )}
+
+                  {!uploading && !completed && (
+                    <Button variant="default" size="md" className="w-full mt-2 font-semibold shadow-sm gap-2" onClick={handleUpload}>
+                      <Play className="w-3.5 h-3.5" /> Run ETL & Ingest ➔
+                    </Button>
+                  )}
+                </div>
               )}
-            </Button>
+            </CardContent>
+          </Card>
+        </div>
 
-            {/* Live Progress Bar */}
-            {uploading && (
-              <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-[#1e2945]">
-                <div className="flex items-center justify-between text-[11px] font-bold">
-                  <span className="text-sky-700 dark:text-cyan-400 font-mono">{cleaningStatus}</span>
-                  <span className="text-slate-800 dark:text-slate-200 font-mono">{progress}%</span>
-                </div>
-                <div className="h-2.5 w-full bg-slate-100 dark:bg-[#070a11] border border-slate-200 dark:border-[#1e2945] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-sky-500 to-emerald-500 transition-all duration-500 rounded-full shadow-[0_0_8px_rgba(6,182,212,0.8)]"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {uploadCompleted && (
-              <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300 text-[11px] rounded-xl space-y-1 font-mono">
-                <div className="font-bold flex items-center gap-1.5 font-sans">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> ETL PIPELINE EXECUTED SUCCESSFULLY
-                </div>
-                <div>• Total Rows Processed: <strong>14,200</strong></div>
-                <div>• Duplicates Cleaned: <strong>15</strong></div>
-                <div>• Outliers Trimmed (3σ Z-score): <strong>8</strong></div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Upload History Table (2 cols) */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between font-sans text-slate-800 dark:text-slate-100">
-              <span>TELEMETRY UPLOAD & DATA QUALITY HISTORY</span>
-              <Badge status="NORMAL">DATA QUALITY INDEX: 99.8%</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>FILENAME / SOURCE</TableHead>
-                  <TableHead>TYPE</TableHead>
-                  <TableHead>TOTAL ROWS</TableHead>
-                  <TableHead>CLEANED</TableHead>
-                  <TableHead>OUTLIERS TRIMMED</TableHead>
-                  <TableHead>STATUS</TableHead>
-                  <TableHead>TIMESTAMP</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-bold text-sky-700 dark:text-cyan-400 flex items-center gap-2 font-mono">
-                    <FileSpreadsheet className="w-4 h-4" /> Pineville_PM01_ShiftA_Telemetry.csv
-                  </TableCell>
-                  <TableCell><Badge variant="cyan">CSV</Badge></TableCell>
-                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">14,200</TableCell>
-                  <TableCell className="text-emerald-700 dark:text-emerald-400 font-bold font-mono">14,185</TableCell>
-                  <TableCell className="text-amber-700 dark:text-amber-400 font-mono">15</TableCell>
-                  <TableCell><Badge status="NORMAL">COMPLETED</Badge></TableCell>
-                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">14:30:15 UTC</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-bold text-slate-800 dark:text-slate-300 flex items-center gap-2 font-mono">
-                    <FileSpreadsheet className="w-4 h-4" /> Dryer_Group3_Steam_Batch.xlsx
-                  </TableCell>
-                  <TableCell><Badge variant="outline">EXCEL</Badge></TableCell>
-                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">8,500</TableCell>
-                  <TableCell className="text-emerald-700 dark:text-emerald-400 font-bold font-mono">8,492</TableCell>
-                  <TableCell className="text-amber-700 dark:text-amber-400 font-mono">8</TableCell>
-                  <TableCell><Badge status="NORMAL">COMPLETED</Badge></TableCell>
-                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">12:15:00 UTC</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-bold text-slate-600 dark:text-slate-400 flex items-center gap-2 font-mono">
-                    <Radio className="w-4 h-4 text-sky-600 dark:text-cyan-400" /> SENSOR_REST_API_STREAM
-                  </TableCell>
-                  <TableCell><Badge variant="default">REST API</Badge></TableCell>
-                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">104,200</TableCell>
-                  <TableCell className="text-emerald-700 dark:text-emerald-400 font-bold font-mono">104,200</TableCell>
-                  <TableCell className="text-emerald-700 dark:text-emerald-400 font-mono">0</TableCell>
-                  <TableCell><Badge status="NORMAL">COMPLETED</Badge></TableCell>
-                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">10:00:00 UTC</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        {/* Recent Ingestion History (col-span-8) */}
+        <div className="col-span-12 lg:col-span-8">
+          <Card className="h-full bg-industrial-card border-industrial-border">
+            <CardHeader className="py-4 px-6 border-b border-industrial-border">
+              <CardTitle className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+                Recent Telemetry Ingestions
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0 font-sans">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-industrial-border">
+                    <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Dataset Name</TableHead>
+                    <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Records</TableHead>
+                    <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Cleaned Outliers</TableHead>
+                    <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow className="border-industrial-border">
+                    <TableCell className="text-xs font-semibold text-zinc-200">pm01_transition_oct2025.csv</TableCell>
+                    <TableCell className="text-xs text-zinc-400 font-normal">12,450</TableCell>
+                    <TableCell className="text-xs text-emerald-400 font-semibold">142 Cleaned</TableCell>
+                    <TableCell className="text-xs text-emerald-400 font-semibold">Success</TableCell>
+                  </TableRow>
+                  <TableRow className="border-industrial-border">
+                    <TableCell className="text-xs font-semibold text-zinc-200">linerboard_ramp_telemetry.xlsx</TableCell>
+                    <TableCell className="text-xs text-zinc-400 font-normal">8,200</TableCell>
+                    <TableCell className="text-xs text-emerald-400 font-semibold">89 Cleaned</TableCell>
+                    <TableCell className="text-xs text-emerald-400 font-semibold">Success</TableCell>
+                  </TableRow>
+                  <TableRow className="border-industrial-border">
+                    <TableCell className="text-xs font-semibold text-zinc-200">opc_ua_live_stream_batch4.csv</TableCell>
+                    <TableCell className="text-xs text-zinc-400 font-normal">45,100</TableCell>
+                    <TableCell className="text-xs text-emerald-400 font-semibold">312 Cleaned</TableCell>
+                    <TableCell className="text-xs text-emerald-400 font-semibold">Success</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

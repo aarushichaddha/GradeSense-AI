@@ -6,76 +6,80 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Settings, Sliders, Shield, Save, CheckCircle2 } from "lucide-react";
+import { Sliders, Shield, Save, CheckCircle2 } from "lucide-react";
 
 export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
     setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setTimeout(() => setSaved(false), 2500);
   };
 
   return (
-    <div className="p-6 space-y-6 font-sans">
+    <div className="p-8 space-y-8 font-sans max-w-7xl mx-auto">
       <PageHeader
-        title="Plant Threshold & AI Sensitivity Configuration"
-        subtitle="Configure quality tolerance bands, closed-loop safety boundaries, and OPC-UA DCS connectivity settings."
+        title="Plant Settings & AI Thresholds"
+        subtitle="Configure quality tolerance limits, safety bounds, and AI advisory execution modes."
       />
 
-      {saved && (
-        <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold rounded-xl flex items-center gap-2.5 shadow-xs animate-bounce font-mono">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <span>Configuration parameters successfully updated and pushed to DCS controller memory!</span>
+      {/* 12-Column Grid */}
+      <div className="grid grid-cols-12 gap-6">
+        {/* Quality Tolerances (col-span-6) */}
+        <div className="col-span-12 md:col-span-6">
+          <Card className="h-full bg-industrial-card border-industrial-border">
+            <CardHeader className="py-4 px-6 border-b border-industrial-border">
+              <CardTitle className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                <Sliders className="w-4 h-4 text-blue-400" />
+                Quality Tolerances
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4 font-sans">
+              <Input label="Max Moisture Tolerance (%)" defaultValue="1.5" />
+              <Input label="Max Basis Weight Offset (g/m²)" defaultValue="2.0" />
+              <Select
+                label="Alarm Delay"
+                options={[
+                  { label: "Immediate (0 min)", value: "0" },
+                  { label: "2 Minutes", value: "2" },
+                  { label: "5 Minutes", value: "5" },
+                ]}
+              />
+            </CardContent>
+          </Card>
         </div>
-      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono">
-        <Card className="border-slate-200 dark:border-[#1e2945] bg-white dark:bg-[#0e1424] shadow-xs">
-          <CardHeader className="bg-slate-50 dark:bg-[#0b101d] border-b border-slate-200 dark:border-[#1e2945]">
-            <CardTitle className="flex items-center gap-2 text-sky-800 dark:text-sky-300 font-sans">
-              <Sliders className="w-4 h-4 text-sky-600 dark:text-sky-400" /> QUALITY TOLERANCE THRESHOLDS
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 p-5 font-sans">
-            <Input label="Max Permissible Moisture Offset (%)" defaultValue="1.5" />
-            <Input label="Max Permissible Basis Weight Dev (g/m²)" defaultValue="2.0" />
-            <Input label="Tensile Strength Minimum Threshold (kN/m)" defaultValue="4.5" />
-            <Select
-              label="Default Alarm Escalation Delay"
-              options={[
-                { label: "Immediate (0 mins)", value: "0" },
-                { label: "2 Minutes", value: "2" },
-                { label: "5 Minutes", value: "5" },
-              ]}
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="border-slate-200 dark:border-[#1e2945] bg-white dark:bg-[#0e1424] shadow-xs">
-          <CardHeader className="bg-slate-50 dark:bg-[#0b101d] border-b border-slate-200 dark:border-[#1e2945]">
-            <CardTitle className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-sans">
-              <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400" /> CLOSED-LOOP AI OVERRIDE BOUNDARIES
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 p-5 font-sans">
-            <Input label="Max Steam Valve Delta Per Adjustment (bar)" defaultValue="0.3" />
-            <Input label="Max Press Pressure Delta (kN/m)" defaultValue="5.0" />
-            <Select
-              label="AI Advisory Execution Mode"
-              options={[
-                { label: "Operator In-The-Loop (Manual Approval)", value: "MANUAL" },
-                { label: "Semi-Autonomous (Auto-apply High Confidence >95%)", value: "SEMI" },
-                { label: "Full Closed-Loop Control", value: "AUTO" },
-              ]}
-            />
-            <div className="pt-2 font-mono">
-              <Button variant="cyan" size="sm" onClick={handleSave} className="flex items-center gap-2 font-mono font-bold">
-                <Save className="w-4 h-4 text-white" /> SAVE CONFIGURATION ➔
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Safety Boundaries (col-span-6) */}
+        <div className="col-span-12 md:col-span-6">
+          <Card className="h-full bg-industrial-card border-industrial-border">
+            <CardHeader className="py-4 px-6 border-b border-industrial-border">
+              <CardTitle className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                <Shield className="w-4 h-4 text-amber-400" />
+                Safety Guardrails
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4 font-sans">
+              <Input label="Max Steam Adjustment Delta (bar)" defaultValue="0.3" />
+              <Select
+                label="Advisory Execution Mode"
+                options={[
+                  { label: "Operator Approval Required (Recommended)", value: "MANUAL" },
+                  { label: "Semi-Autonomous (Auto >95% Confidence)", value: "SEMI" },
+                ]}
+              />
+              <div className="pt-3 flex items-center justify-between">
+                <Button variant="default" size="md" onClick={handleSave} className="gap-2 font-semibold shadow-sm">
+                  <Save className="w-4 h-4" /> Save Settings
+                </Button>
+                {saved && (
+                  <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4" /> Saved Successfully
+                  </span>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

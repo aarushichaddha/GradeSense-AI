@@ -6,160 +6,168 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TransitionTrendChart } from "@/components/charts/transition-trend-chart";
-import { RefreshCw, Play, ArrowRight, CheckCircle2, Clock, Activity, Zap } from "lucide-react";
+import { Modal } from "@/components/ui/modal";
+import { RefreshCw, Clock, ArrowRight, Play, CheckCircle2, Pause, Sparkles } from "lucide-react";
+
+interface TransitionItem {
+  id: string;
+  source: string;
+  target: string;
+  time: string;
+  duration: string;
+  waste: string;
+  status: "IN TRANSITION" | "SCHEDULED" | "COMPLETED";
+}
+
+const INITIAL_TRANSITIONS: TransitionItem[] = [
+  { id: "TR-2026-089", source: "P-80GSM", target: "L-120GSM", time: "14:00 UTC", duration: "45 Mins", waste: "1.2 Tons", status: "IN TRANSITION" },
+  { id: "TR-2026-090", source: "L-120GSM", target: "K-150GSM", time: "18:30 UTC", duration: "55 Mins", waste: "0.9 Tons", status: "SCHEDULED" },
+  { id: "TR-2026-088", source: "N-70GSM", target: "P-80GSM", time: "08:15 UTC", duration: "38 Mins", waste: "0.8 Tons", status: "COMPLETED" },
+];
 
 export default function GradeTransitionsPage() {
-  const [activeStep, setActiveStep] = useState(2); // Step 2 active
+  const [isPaused, setIsPaused] = useState(false);
+  const [isOptimized, setIsOptimized] = useState(false);
+  const [transitions, setTransitions] = useState<TransitionItem[]>(INITIAL_TRANSITIONS);
+  const [selectedTr, setSelectedTr] = useState<TransitionItem | null>(null);
+
+  const togglePause = () => {
+    setIsPaused(!isPaused);
+  };
+
+  const handleOptimize = () => {
+    setIsOptimized(true);
+    setTransitions((prev) =>
+      prev.map((tr) => (tr.id === "TR-2026-089" ? { ...tr, waste: "0.7 Tons (-42%)" } : tr))
+    );
+  };
 
   return (
-    <div className="p-6 space-y-6 font-sans">
+    <div className="p-8 space-y-8 font-sans max-w-7xl mx-auto">
       <PageHeader
-        title="Grade Change & Ramp Sequence Management"
-        subtitle="Execute, monitor, and automate paper grade transitions with closed-loop AI setpoint advisories."
-        actionText="START NEW TRANSITION"
+        title="Grade Transition Execution & Planning"
+        subtitle="Manage active paper grade change sequences, target specifications, and predicted transition duration."
+        actionText="Schedule Transition"
+        onAction={() => setSelectedTr(transitions[1])}
       />
 
-      {/* Active Transition Progress Banner */}
-      <Card className="border-sky-200 dark:border-[#1e2945] bg-gradient-to-r from-sky-50/80 via-white to-blue-50/60 dark:from-[#0b101d] dark:via-[#0e1424] dark:to-[#10172a] shadow-xs">
-        <CardContent className="p-5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 w-full md:w-auto">
-            <div className="p-3 bg-sky-100 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 rounded-xl text-sky-700 dark:text-sky-300">
-              <RefreshCw className="w-6 h-6 animate-spin text-sky-600 dark:text-sky-400" />
+      {/* Active Transition Status Banner */}
+      <Card className="border-blue-500/30 bg-industrial-card p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 font-sans">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl shrink-0">
+              <RefreshCw className={`w-6 h-6 text-blue-400 ${isPaused ? "" : "animate-spin"}`} />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-extrabold text-slate-900 dark:text-slate-100 font-sans">ACTIVE RAMP SEQUENCE #TR-2026-089</span>
-                <Badge status="NORMAL">IN PROGRESS</Badge>
+              <div className="text-xs text-blue-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                ACTIVE TRANSITION {isPaused ? "(PAUSED BY OPERATOR)" : "IN PROGRESS"}
               </div>
-              <div className="text-xs text-slate-600 dark:text-slate-400 mt-1 font-mono flex items-center gap-4">
-                <span>Progress: <strong className="text-emerald-700 dark:text-emerald-400">64%</strong></span>
-                <span>Est. Completion: <strong className="text-slate-800 dark:text-slate-200">14:45 UTC</strong></span>
-                <span>Predicted Waste: <strong className="text-amber-700 dark:text-amber-400">1.2 Tons</strong></span>
+              <div className="text-lg font-bold text-zinc-100 flex items-center gap-2 mt-1">
+                <span>P-80GSM (Fine Paper)</span>
+                <ArrowRight className="w-4 h-4 text-blue-400" />
+                <span>L-120GSM (Packaging Board)</span>
+              </div>
+              <div className="text-xs text-zinc-400 flex flex-wrap items-center gap-4 mt-2">
+                <span>Progress: <strong className="text-blue-400 font-bold">64%</strong></span>
+                <span>Est. Completion: <strong className="text-zinc-200 font-semibold">14:45 UTC</strong></span>
+                <span>Predicted Waste: <strong className="text-emerald-400 font-bold">{isOptimized ? "0.7 Tons (-42%)" : "1.2 Tons"}</strong></span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 font-mono">
-            <Button variant="outline" size="sm">PAUSE RAMP</Button>
-            <Button variant="cyan" size="sm">OPTIMIZE TRANSITION CURVE ➔</Button>
+          <div className="flex items-center gap-3 shrink-0">
+            <Button
+              variant={isPaused ? "default" : "outline"}
+              size="md"
+              onClick={togglePause}
+              className="font-semibold gap-1.5"
+            >
+              {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
+              {isPaused ? "Resume Ramp" : "Pause Ramp"}
+            </Button>
+
+            {isOptimized ? (
+              <div className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold text-xs rounded-xl flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" /> Curve Optimized
+              </div>
+            ) : (
+              <Button variant="default" size="md" onClick={handleOptimize} className="font-semibold gap-1.5 shadow-sm">
+                <Sparkles className="w-4 h-4 text-amber-300" /> Optimize Transition Curve ➔
+              </Button>
+            )}
           </div>
-        </CardContent>
-      </Card>
-
-
-      {/* Transition Ramp Sequence Steps */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-sans text-slate-800 dark:text-slate-100">
-            <Activity className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-            ACTIVE TRANSITION RAMP SEQUENCE STEPS
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 font-mono">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl space-y-1">
-              <div className="flex items-center justify-between text-[10px] text-emerald-700 dark:text-emerald-300 font-bold font-sans">
-                <span>STEP 1 • COMPLETED</span>
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <div className="text-xs font-bold text-slate-900 dark:text-slate-100">Stock Flow Adjustment</div>
-              <p className="text-[11px] text-slate-600 dark:text-slate-400 font-sans">Ramped headbox dilution from 360 L/min to 385 L/min.</p>
-            </div>
-
-            <div className="p-3.5 bg-sky-50 dark:bg-sky-950/40 border-2 border-sky-400 dark:border-sky-500 rounded-xl space-y-1 shadow-2xs animate-pulse">
-              <div className="flex items-center justify-between text-[10px] text-sky-800 dark:text-sky-300 font-bold font-sans">
-                <span>STEP 2 • IN PROGRESS (64%)</span>
-                <Activity className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400 animate-spin" />
-              </div>
-              <div className="text-xs font-bold text-slate-900 dark:text-slate-100">Steam Group #3 Ramp</div>
-              <p className="text-[11px] text-slate-600 dark:text-slate-400 font-sans">Stepping steam pressure +0.25 bar to compensate basis weight.</p>
-            </div>
-
-            <div className="p-3.5 bg-slate-50 dark:bg-[#070a11] border border-slate-200 dark:border-[#1e2945] rounded-xl space-y-1 opacity-70">
-              <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 font-bold font-sans">
-                <span>STEP 3 • UPCOMING</span>
-                <Clock className="w-3.5 h-3.5 text-slate-400" />
-              </div>
-              <div className="text-xs font-bold text-slate-700 dark:text-slate-300">Machine Wire Speed Step</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans">Decelerating wire speed to 825 m/min for caliper target.</p>
-            </div>
-
-            <div className="p-3.5 bg-slate-50 dark:bg-[#070a11] border border-slate-200 dark:border-[#1e2945] rounded-xl space-y-1 opacity-70">
-              <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 font-bold font-sans">
-                <span>STEP 4 • UPCOMING</span>
-                <Clock className="w-3.5 h-3.5 text-slate-400" />
-              </div>
-              <div className="text-xs font-bold text-slate-700 dark:text-slate-300">Quality Lock & Verification</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans">Scanner verification & closed-loop lock on 120.0 g/m².</p>
-            </div>
-          </div>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Scheduled Grade Transitions Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-sans text-slate-800 dark:text-slate-100">
-            <Clock className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-            UPCOMING GRADE CHANGE SCHEDULE (PM-01 MACHINE)
+      <Card className="bg-industrial-card border-industrial-border">
+        <CardHeader className="py-4 px-6 border-b border-industrial-border">
+          <CardTitle className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+            <Clock className="w-4 h-4 text-blue-400" />
+            Upcoming Grade Change Schedule (PM-01 Machine)
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0 font-sans">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>TRANSITION ID</TableHead>
-                <TableHead>SOURCE GRADE</TableHead>
-                <TableHead>TARGET GRADE</TableHead>
-                <TableHead>SCHEDULED START</TableHead>
-                <TableHead>EST. DURATION</TableHead>
-                <TableHead>PREDICTED WASTE</TableHead>
-                <TableHead>STATUS</TableHead>
-                <TableHead>ACTIONS</TableHead>
+              <TableRow className="border-industrial-border">
+                <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Transition ID</TableHead>
+                <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Source Grade</TableHead>
+                <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Target Grade</TableHead>
+                <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Scheduled Start</TableHead>
+                <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Est. Duration</TableHead>
+                <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Predicted Waste</TableHead>
+                <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Status</TableHead>
+                <TableHead className="text-xs text-zinc-400 uppercase font-semibold text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell className="font-bold text-sky-700 dark:text-sky-400 font-mono">TR-2026-089</TableCell>
-                <TableCell className="font-bold text-slate-800 dark:text-slate-200">P-80GSM</TableCell>
-                <TableCell className="font-bold text-slate-900 dark:text-slate-100">L-120GSM</TableCell>
-                <TableCell className="font-mono text-slate-700 dark:text-slate-300">14:00 UTC</TableCell>
-                <TableCell className="font-mono text-slate-700 dark:text-slate-300">45 Mins</TableCell>
-                <TableCell className="text-amber-700 dark:text-amber-400 font-bold font-mono">1.2 Tons</TableCell>
-                <TableCell><Badge status="WARNING">IN TRANSITION</Badge></TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="sm"><Play className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" /></Button>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-bold text-slate-600 dark:text-slate-400 font-mono">TR-2026-090</TableCell>
-                <TableCell className="text-slate-700 dark:text-slate-300">L-120GSM</TableCell>
-                <TableCell className="text-slate-700 dark:text-slate-300">K-150GSM</TableCell>
-                <TableCell className="font-mono text-slate-600 dark:text-slate-400">18:30 UTC</TableCell>
-                <TableCell className="font-mono text-slate-600 dark:text-slate-400">55 Mins</TableCell>
-                <TableCell className="text-emerald-700 dark:text-emerald-400 font-bold font-mono">0.9 Tons</TableCell>
-                <TableCell><Badge status="STANDBY">SCHEDULED</Badge></TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="sm"><Play className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" /></Button>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-bold text-slate-500 dark:text-slate-400 font-mono">TR-2026-088</TableCell>
-                <TableCell className="text-slate-600 dark:text-slate-400">N-70GSM</TableCell>
-                <TableCell className="text-slate-600 dark:text-slate-400">P-80GSM</TableCell>
-                <TableCell className="font-mono text-slate-600 dark:text-slate-400">08:15 UTC</TableCell>
-                <TableCell className="font-mono text-slate-600 dark:text-slate-400">38 Mins</TableCell>
-                <TableCell className="text-slate-600 dark:text-slate-400 font-mono">0.8 Tons</TableCell>
-                <TableCell><Badge status="NORMAL">COMPLETED</Badge></TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="sm"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /></Button>
-                </TableCell>
-              </TableRow>
+              {transitions.map((tr) => (
+                <TableRow key={tr.id} className="border-industrial-border">
+                  <TableCell className="text-xs font-bold text-blue-400">{tr.id}</TableCell>
+                  <TableCell className="text-xs text-zinc-200 font-semibold">{tr.source}</TableCell>
+                  <TableCell className="text-xs text-zinc-200 font-semibold">{tr.target}</TableCell>
+                  <TableCell className="text-xs text-zinc-400">{tr.time}</TableCell>
+                  <TableCell className="text-xs text-zinc-400">{tr.duration}</TableCell>
+                  <TableCell className="text-xs font-bold text-amber-400">{tr.waste}</TableCell>
+                  <TableCell>
+                    <Badge variant={tr.status === "IN TRANSITION" ? "warning" : tr.status === "SCHEDULED" ? "default" : "success"}>
+                      {tr.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedTr(tr)}
+                      className="h-8 px-2.5 text-xs"
+                    >
+                      <Play className="w-3.5 h-3.5" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+
+      {/* Detail Modal */}
+      {selectedTr && (
+        <Modal isOpen={!!selectedTr} onClose={() => setSelectedTr(null)} title={`Transition Sequence — ${selectedTr.id}`}>
+          <div className="space-y-4 text-xs font-sans">
+            <div className="p-4 bg-industrial-bg border border-industrial-border rounded-xl space-y-2 text-zinc-300">
+              <div><strong>Sequence:</strong> {selectedTr.source} ➔ {selectedTr.target}</div>
+              <div><strong>Start Time:</strong> {selectedTr.time}</div>
+              <div><strong>Duration:</strong> {selectedTr.duration}</div>
+              <div><strong>Est. Waste:</strong> <span className="text-emerald-400 font-bold">{selectedTr.waste}</span></div>
+            </div>
+            <div className="flex justify-end pt-2">
+              <Button variant="default" size="sm" onClick={() => setSelectedTr(null)}>Confirm & Start Ramp</Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

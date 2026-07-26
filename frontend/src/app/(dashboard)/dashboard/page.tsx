@@ -3,246 +3,198 @@
 import React, { useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { TelemetryMetric } from "@/components/ui/telemetry-metric";
-import { SensorGauge } from "@/components/ui/sensor-gauge";
-import { StatusIndicator } from "@/components/ui/status-indicator";
 import { RiskScoreGauge } from "@/components/ui/risk-score-gauge";
 import { MachineHealthMeter } from "@/components/ui/machine-health-meter";
 import { AnimatedTrendChart } from "@/components/charts/animated-trend-chart";
-import { QualityControlChart } from "@/components/charts/quality-control-chart";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { AlertTriangle, Lightbulb, Play, ArrowRight, Activity, ShieldAlert, Cpu, Sparkles, CheckCircle2, Zap } from "lucide-react";
+import { Lightbulb, ArrowRight, Activity, CheckCircle2, Cpu } from "lucide-react";
 
 export default function OverviewDashboardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [recommendationApplied, setRecommendationApplied] = useState(false);
 
   return (
-    <div className="p-6 space-y-6 font-sans">
+    <div className="p-8 space-y-8 font-sans max-w-7xl mx-auto">
+      {/* Header */}
       <PageHeader
-        title="DCS Control Room • PM-01 Executive Dashboard"
-        subtitle="Real-time grade change telemetry, predictive deviation risks, and prescriptive control advisory."
-        actionText="EXECUTE GRADE CHANGE"
+        title="Control Room Overview"
+        subtitle="Real-time grade transition status, predictive quality risk assessment, and prescriptive control advisory."
+        actionText="Start Grade Change"
         onAction={() => setIsModalOpen(true)}
       />
 
-      {/* Top Industrial Header Cards: Current Grade, Target Grade, Machine Health, Risk Score */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
-        {/* Current Grade Card */}
-        <Card className="border-sky-200 dark:border-[#1e2945] bg-white dark:bg-[#0e1424] shadow-xs">
-          <CardContent className="p-4">
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider mb-1 font-sans">CURRENT RUNNING GRADE</div>
-            <div className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight font-mono">P-80GSM</div>
-            <div className="text-[11px] text-sky-700 dark:text-sky-400 mt-1 font-semibold font-sans">Offset Fine Copy Paper (79.8 g/m²)</div>
-            <div className="mt-2.5 text-[10px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-[#1e2945] pt-2 flex justify-between font-mono">
-              <span>TARGET MOISTURE:</span>
-              <span className="text-emerald-700 dark:text-emerald-400 font-bold">6.8%</span>
+      {/* 12-Column Grid — Top 4 Essential KPI Cards */}
+      <div className="grid grid-cols-12 gap-6">
+        {/* Running Grade */}
+        <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+          <Card className="h-full bg-industrial-card border-industrial-border p-6 flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400 block mb-1">
+                Running Grade
+              </span>
+              <div className="text-3xl font-heading font-extrabold text-zinc-100 mt-1">
+                P-80GSM
+              </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Target Grade Card */}
-        <Card className="border-sky-200 dark:border-[#1e2945] bg-white dark:bg-[#0e1424] shadow-xs">
-          <CardContent className="p-4">
-            <div className="text-[10px] text-sky-700 dark:text-sky-400 font-bold uppercase tracking-wider mb-1 font-sans">TARGET GRADE (TRANSITION)</div>
-            <div className="text-2xl font-extrabold text-sky-800 dark:text-sky-300 tracking-tight flex items-center gap-2 font-mono">
-              L-120GSM <ArrowRight className="w-4 h-4 text-sky-600 dark:text-sky-400 animate-pulse" />
+            <div className="text-xs text-blue-400 font-medium mt-3">
+              Fine Copy Paper (79.8 g/m²)
             </div>
-            <div className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 font-semibold font-sans">Packaging Linerboard (120.0 g/m²)</div>
-            <div className="mt-2.5 text-[10px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-[#1e2945] pt-2 flex justify-between font-mono">
-              <span>EST. COMPLETION:</span>
-              <span className="text-slate-800 dark:text-slate-200 font-bold">14:45 UTC</span>
+          </Card>
+        </div>
+
+        {/* Target Grade */}
+        <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+          <Card className="h-full bg-industrial-card border-industrial-border p-6 flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400 block mb-1">
+                Target Grade
+              </span>
+              <div className="text-3xl font-heading font-extrabold text-zinc-100 mt-1 flex items-center gap-2">
+                L-120GSM <ArrowRight className="w-5 h-5 text-blue-400" />
+              </div>
             </div>
-          </CardContent>
-        </Card>
+            <div className="text-xs text-zinc-400 font-medium mt-3">
+              Linerboard Packaging (120.0 g/m²)
+            </div>
+          </Card>
+        </div>
 
-        {/* Machine Health Meter */}
-        <MachineHealthMeter healthPercent={98.4} machineCode="PM-01" />
+        {/* Machine Health */}
+        <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+          <MachineHealthMeter healthPercent={98.4} machineCode="PM-01" />
+        </div>
 
-        {/* Risk Score Gauge */}
-        <RiskScoreGauge score={24} label="PREDICTED QUALITY RISK SCORE" />
+        {/* Quality Risk Score */}
+        <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+          <RiskScoreGauge score={24} label="Quality Risk Score" />
+        </div>
       </div>
 
-      {/* Transition Progress Banner */}
-      <Card className="border-sky-200 dark:border-[#1e2945] bg-gradient-to-r from-sky-50/70 via-white to-blue-50/50 dark:from-[#0b101d] dark:via-[#0e1424] dark:to-[#10172a] shadow-xs">
-        <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 w-full md:w-auto">
-            <div className="p-3 bg-sky-100 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 rounded-xl text-sky-700 dark:text-sky-300 shadow-2xs">
-              <Activity className="w-5 h-5 animate-spin text-sky-600 dark:text-sky-400" />
-            </div>
-            <div className="w-full">
-              <div className="flex items-center justify-between text-xs text-slate-800 dark:text-slate-200 font-bold mb-1.5 font-sans">
-                <span>ACTIVE GRADE TRANSITION SEQUENCE (P-80GSM ➔ L-120GSM)</span>
-                <span className="font-mono bg-sky-100 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 px-2 py-0.5 rounded text-[11px] text-sky-800 dark:text-sky-300">PROGRESS: 64%</span>
-              </div>
-              <div className="h-3 w-full md:w-96 bg-slate-100 dark:bg-[#070a11] border border-slate-200 dark:border-[#1e2945] rounded-full relative overflow-hidden p-0.5">
-                <div
-                  className="h-full bg-gradient-to-r from-sky-500 via-blue-500 to-emerald-500 rounded-full transition-all duration-700"
-                  style={{ width: "64%" }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs font-mono">
-            <span className="text-slate-500 dark:text-slate-400 font-sans">Predicted Off-Spec Waste:</span>
-            <span className="text-amber-800 dark:text-amber-300 font-bold border border-amber-200 dark:border-amber-800 px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 rounded-lg shadow-2xs">1.2 TONS (-28% vs Manual)</span>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Live DCS Sensor Telemetry Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <TelemetryMetric
-          label="Reel Moisture"
-          tag="TAG_MOIST_01"
-          value={6.8}
-          unit="%"
-          target={6.8}
-          status="CRITICAL"
-          trend="up"
-        />
-        <TelemetryMetric
-          label="Basis Weight"
-          tag="TAG_BW_02"
-          value={78.4}
-          unit="g/m²"
-          target={80.0}
-          status="WARNING"
-          trend="down"
-        />
-        <TelemetryMetric
-          label="Machine Speed"
-          tag="TAG_SPD_01"
-          value={1150}
-          unit="m/min"
-          target={1200}
-          status="NORMAL"
-          trend="up"
-        />
-        <TelemetryMetric
-          label="Dryer 3 Steam Press"
-          tag="TAG_STM_03"
-          value={3.82}
-          unit="bar"
-          target={3.6}
-          status="NORMAL"
-          trend="flat"
-        />
-      </div>
-
-      {/* Animated Recharts Telemetry Curve & Prescriptive AI Advisory Column */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Animated Recharts Multi-line Telemetry Chart (2 cols) */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 font-sans text-slate-800 dark:text-slate-100">
-              <Sparkles className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-              ANIMATED TELEMETRY TRANSITION CURVE (REAL-TIME DCS INGESTION)
-            </CardTitle>
-            <StatusIndicator status="NORMAL" label="INGESTION 100 Hz" />
-          </CardHeader>
-          <CardContent>
-            <AnimatedTrendChart />
-          </CardContent>
-        </Card>
-
-        {/* AI Prescriptive Control Panel (1 col) */}
-        <Card className="border-amber-200 dark:border-amber-900/60 bg-gradient-to-b from-amber-50/40 via-white to-white dark:from-amber-950/20 dark:via-[#0e1424] dark:to-[#0e1424]">
-          <CardHeader className="bg-amber-50/80 dark:bg-amber-950/40 border-amber-100 dark:border-amber-900/60">
-            <CardTitle className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-sans">
-              <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              PRESCRIPTIVE CONTROL ADVISORY
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-xs font-mono">
-            <div className="p-3.5 bg-amber-50/60 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/80 rounded-xl space-y-3">
-              <div className="flex items-center justify-between text-amber-900 dark:text-amber-200 font-bold">
-                <span className="font-sans">PREDICTED MOISTURE OFFSET</span>
-                <span className="text-[9px] bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 px-2 py-0.5 border border-red-200 dark:border-red-800 rounded-full font-mono font-semibold animate-pulse">HIGH RISK</span>
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed font-sans">
-                Moisture predicted to spike +1.4% above spec USL in 4 mins due to basis weight ramp sequence.
-              </p>
-
-              <div className="p-3 bg-white dark:bg-[#070a11] border border-slate-200 dark:border-[#1e2945] rounded-lg text-slate-800 dark:text-slate-200 text-[11px] space-y-1.5 font-mono shadow-2xs">
-                <div><strong>Action:</strong> Increase Steam Valve #3 by +0.25 bar</div>
-                <div><strong>Current:</strong> 3.57 bar ➔ <strong>Target:</strong> 3.82 bar</div>
-                <div><strong>AI Confidence:</strong> <span className="text-emerald-700 dark:text-emerald-400 font-bold">96.4%</span></div>
-              </div>
-
-              <div className="mt-3">
-                {recommendationApplied ? (
-                  <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-center font-bold text-[11px] rounded-lg flex items-center justify-center gap-2 font-sans shadow-2xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> DISPATCHED TO OPC-UA CONTROLLER
+      {/* Grade Transition Sequence Progress Card (12 Cols) */}
+      <div className="grid grid-cols-12 gap-6">
+        <div className="col-span-12">
+          <Card className="bg-industrial-card border-industrial-border p-6">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="flex items-center gap-4 flex-1">
+                <div className="p-2.5 bg-blue-500/10 border border-blue-500/20 rounded-xl shrink-0">
+                  <Activity className="w-5 h-5 text-blue-400 animate-pulse" />
+                </div>
+                <div className="w-full">
+                  <div className="flex items-center justify-between text-xs text-zinc-200 font-semibold mb-2">
+                    <span className="flex items-center gap-2">
+                      Active Transition Sequence: <strong className="text-zinc-100 font-bold">P-80GSM ➔ L-120GSM</strong>
+                    </span>
+                    <span className="text-blue-400 font-bold text-sm">64% Complete</span>
                   </div>
-                ) : (
-                  <Button variant="warning" size="sm" className="w-full text-xs font-sans font-bold" onClick={() => setRecommendationApplied(true)}>
-                    <Zap className="w-3.5 h-3.5 mr-1" /> DISPATCH ADVISORY TO DCS ➔
-                  </Button>
-                )}
+
+                  {/* Modern Timeline Progress Bar */}
+                  <div className="h-2.5 w-full bg-industrial-bg border border-industrial-border rounded-full overflow-hidden p-0.5">
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-600 to-emerald-500 rounded-full transition-all duration-700 shadow-sm"
+                      style={{ width: "64%" }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-xs text-zinc-300 bg-industrial-bg border border-industrial-border px-4 py-3 rounded-xl flex items-center gap-3 shrink-0">
+                <span className="text-zinc-400">Est. Off-Spec Waste:</span>
+                <strong className="text-emerald-400 font-bold text-sm">1.2 Tons (-28%)</strong>
               </div>
             </div>
+          </Card>
+        </div>
+      </div>
 
-            {/* Active Critical Alerts Mini-List */}
-            <div className="p-3 bg-slate-50 dark:bg-[#070a11] border border-slate-200 dark:border-[#1e2945] rounded-xl space-y-2 font-mono">
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase flex items-center justify-between font-sans">
-                <span>ACTIVE ALERTS</span>
-                <span className="text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-950/60 px-2 py-0.5 rounded-full border border-red-200 dark:border-red-800 font-bold">2 ACTIVE</span>
-              </div>
-              <div className="text-[11px] text-red-700 dark:text-red-400 border-l-2 border-red-500 pl-2 py-0.5 font-sans">
-                Reel Moisture Sensor offset 8.2% vs target 6.8%.
-              </div>
-              <div className="text-[11px] text-amber-700 dark:text-amber-400 border-l-2 border-amber-500 pl-2 py-0.5 font-sans">
-                Pulp Feed Pump #2 flow rate fluctuating ±2.1%.
-              </div>
+      {/* Main Operational View: 8 Cols Chart + 4 Cols Premium AI Advisory */}
+      <div className="grid grid-cols-12 gap-6">
+        {/* Real-time Telemetry Trend Chart (col-span-8) */}
+        <div className="col-span-12 lg:col-span-8">
+          <Card className="h-full bg-industrial-card border-industrial-border">
+            <CardHeader className="py-4 px-6 border-b border-industrial-border flex items-center justify-between">
+              <CardTitle className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-blue-400" />
+                Real-Time Telemetry Trends (100 Hz)
+              </CardTitle>
+              <span className="text-[11px] text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                Live DCS Sensors
+              </span>
+            </CardHeader>
+            <CardContent className="p-6">
+              <AnimatedTrendChart />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Premium AI Prescriptive Control Advisory Card (col-span-4) */}
+        <div className="col-span-12 lg:col-span-4">
+          <Card className="h-full bg-industrial-card border-amber-500/20 flex flex-col justify-between">
+            <div>
+              <CardHeader className="py-4 px-6 border-b border-amber-500/20 bg-amber-500/5">
+                <CardTitle className="flex items-center gap-2 text-xs text-amber-400 font-semibold uppercase tracking-wider">
+                  <Lightbulb className="w-4 h-4 text-amber-400" />
+                  AI Control Advisory
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent className="p-6 space-y-5 text-xs">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between font-semibold">
+                    <span className="text-zinc-200">Recommended Adjustment</span>
+                    <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
+                      96.4% Confidence
+                    </span>
+                  </div>
+                  <p className="text-zinc-400 text-xs leading-relaxed">
+                    Increase Steam Valve #3 to prevent predicted +1.4% moisture spike during basis weight ramp.
+                  </p>
+                </div>
+
+                <div className="p-4 bg-industrial-bg border border-industrial-border rounded-xl space-y-2 text-xs">
+                  <div className="flex justify-between text-zinc-300">
+                    <span>Target Parameter:</span>
+                    <strong className="text-zinc-100 font-semibold">Dryer Steam Pressure</strong>
+                  </div>
+                  <div className="flex justify-between text-zinc-300">
+                    <span>Setpoint Adjustment:</span>
+                    <span className="text-amber-400 font-bold">3.57 ➔ 3.82 bar (+0.25)</span>
+                  </div>
+                </div>
+              </CardContent>
             </div>
-          </CardContent>
-        </Card>
+
+            <div className="p-6 pt-0">
+              {recommendationApplied ? (
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-center font-semibold text-xs flex items-center justify-center gap-2 rounded-xl">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  Dispatched to DCS Controller
+                </div>
+              ) : (
+                <Button variant="warning" size="md" className="w-full font-bold shadow-sm" onClick={() => setRecommendationApplied(true)}>
+                  Dispatch Advisory to DCS ➔
+                </Button>
+              )}
+            </div>
+          </Card>
+        </div>
       </div>
 
-      {/* Sensor Gauges & SPC Bands */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="font-sans text-slate-800 dark:text-slate-100">PAPER MACHINE SECTION GAUGES</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 font-mono">
-            <SensorGauge title="Wet End Vacuum #2" value={45.2} min={30} max={60} unit="kPa" status="NORMAL" />
-            <SensorGauge title="Press Section Load #1" value={82.0} min={70} max={100} unit="kN/m" status="NORMAL" />
-            <SensorGauge title="Caliper Reel Scanner" value={118} min={100} max={140} unit="µm" status="WARNING" />
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 font-sans text-slate-800 dark:text-slate-100">
-              <ShieldAlert className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-              STATISTICAL PROCESS CONTROL (SPC) SPECIFICATION BANDS
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <QualityControlChart />
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Grade Change Execution Confirmation Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="EXECUTE PAPER GRADE TRANSITION">
-        <div className="space-y-4 text-xs font-sans text-slate-800 dark:text-slate-200">
-          <p className="text-slate-600 dark:text-slate-400">
-            Confirm execution of grade transition sequence on <strong>PM-01 Paper Machine</strong>:
+      {/* Grade Change Execution Modal */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Execute Paper Grade Transition">
+        <div className="space-y-4 text-xs font-sans">
+          <p className="text-zinc-300">
+            Confirm grade transition sequence on <strong>PM-01 Paper Machine</strong>:
           </p>
-          <div className="p-4 bg-slate-50 dark:bg-[#070a11] border border-slate-200 dark:border-[#1e2945] rounded-xl space-y-1.5 font-mono text-slate-800 dark:text-slate-200">
-            <div><strong>Source Grade:</strong> P-80GSM (Offset Copy Paper)</div>
+          <div className="p-4 bg-industrial-bg border border-industrial-border space-y-2 text-zinc-300 rounded-xl">
+            <div><strong>Source Grade:</strong> P-80GSM (Fine Copy Paper)</div>
             <div><strong>Target Grade:</strong> L-120GSM (Linerboard)</div>
             <div><strong>Est. Transition Time:</strong> 45 Minutes</div>
-            <div><strong>AI Closed-Loop Safety:</strong> Bound within ±5% operator safety limit</div>
+            <div><strong>AI Safety Bound:</strong> ±5% Operator Guardrail</div>
           </div>
-          <div className="flex justify-end gap-2.5 pt-2 font-mono">
-            <Button variant="outline" size="sm" onClick={() => setIsModalOpen(false)}>CANCEL</Button>
-            <Button variant="cyan" size="sm" onClick={() => setIsModalOpen(false)}>CONFIRM & START RAMP ➔</Button>
+          <div className="flex justify-end gap-2.5 pt-2">
+            <Button variant="outline" size="sm" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button variant="default" size="sm" onClick={() => setIsModalOpen(false)}>Start Ramp ➔</Button>
           </div>
         </div>
       </Modal>

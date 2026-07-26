@@ -27,27 +27,27 @@ export function TransitionTrendChart() {
     <div className="w-full h-64 font-mono text-xs">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={MOCK_TRANSITION_DATA} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis dataKey="time" stroke="#94a3b8" tick={{ fill: "#475569", fontSize: 10 }} />
-          <YAxis stroke="#94a3b8" domain={[4, 8]} tick={{ fill: "#475569", fontSize: 10 }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <XAxis dataKey="time" stroke="#9ca3af" tick={{ fill: "#9ca3af", fontSize: 10 }} />
+          <YAxis stroke="#9ca3af" domain={[4, 8]} tick={{ fill: "#9ca3af", fontSize: 10 }} />
           <Tooltip
-            contentStyle={{ backgroundColor: "#ffffff", borderColor: "#cbd5e1", color: "#0f172a", borderRadius: "8px", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)" }}
+            contentStyle={{ backgroundColor: "#111827", borderColor: "#374151", color: "#f3f4f6" }}
           />
           <Legend wrapperStyle={{ fontSize: "11px", paddingTop: "10px" }} />
-          <ReferenceLine y={6.8} label={{ value: "SP Target (6.8%)", fill: "#059669", fontSize: 10 }} stroke="#059669" strokeDasharray="4 4" />
+          <ReferenceLine y={6.8} label="SP Target (6.8%)" stroke="#10b981" strokeDasharray="4 4" />
           <Line
             type="monotone"
             dataKey="actualMoisture"
             name="Actual Reel Moisture (%)"
-            stroke="#dc2626"
+            stroke="#ef4444"
             strokeWidth={2.5}
-            dot={{ r: 4, fill: "#dc2626" }}
+            dot={{ r: 3 }}
           />
           <Line
             type="monotone"
             dataKey="predictedMoisture"
             name="AI Predicted Curve (%)"
-            stroke="#0284c7"
+            stroke="#06b6d4"
             strokeWidth={2}
             strokeDasharray="5 5"
           />
@@ -56,5 +56,3 @@ export function TransitionTrendChart() {
     </div>
   );
 }
-
-

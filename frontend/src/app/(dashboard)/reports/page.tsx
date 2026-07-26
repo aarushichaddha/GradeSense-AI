@@ -6,110 +6,191 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
-import { FileText, Download, Printer, CheckCircle2 } from "lucide-react";
+import { FileText, Download, Printer, CheckCircle2, Loader2 } from "lucide-react";
+
+interface ReportItem {
+  id: string;
+  title: string;
+  type: string;
+  author: string;
+  date: string;
+}
+
+const INITIAL_REPORTS: ReportItem[] = [
+  { id: "RPT-901", title: "Shift A Grade Transition Yield Summary", type: "SHIFT_YIELD", author: "J. Miller", date: "2026-07-25" },
+  { id: "RPT-900", title: "Monthly Off-Spec Waste Reduction", type: "WASTE_REDUCTION", author: "S. Chen", date: "2026-07-24" },
+  { id: "RPT-899", title: "AI Closed-Loop Advisory Compliance Log", type: "AI_COMPLIANCE", author: "R. Patel", date: "2026-07-22" },
+];
 
 export default function ReportsPage() {
-  const [reportGenerated, setReportGenerated] = useState(false);
+  const [reports, setReports] = useState<ReportItem[]>(INITIAL_REPORTS);
+  const [reportType, setReportType] = useState("SHIFT_YIELD");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [lastGenerated, setLastGenerated] = useState<string | null>(null);
+
+  const handleGenerate = () => {
+    setIsGenerating(true);
+    setLastGenerated(null);
+    setTimeout(() => {
+      const newId = `RPT-${Math.floor(900 + Math.random() * 99)}`;
+      const titleMap: Record<string, string> = {
+        SHIFT_YIELD: "Shift A Grade Transition Yield Summary",
+        WASTE_REDUCTION: "Monthly Off-Spec Waste Reduction Report",
+        AI_COMPLIANCE: "AI Closed-Loop Advisory Compliance Log",
+      };
+      const newReport: ReportItem = {
+        id: newId,
+        title: titleMap[reportType] || "Plant Quality Performance Report",
+        type: reportType,
+        author: "Shift Lead",
+        date: new Date().toISOString().slice(0, 10),
+      };
+
+      setReports([newReport, ...reports]);
+      setIsGenerating(false);
+      setLastGenerated(`${newReport.id}_${newReport.type}.pdf`);
+    }, 800);
+  };
+
+  const handleDownload = (rpt: ReportItem) => {
+    const content = `GradeSense AI - Plant Performance Report\nReport ID: ${rpt.id}\nTitle: ${rpt.title}\nType: ${rpt.type}\nAuthor: ${rpt.author}\nDate: ${rpt.date}\nStatus: Verified On-Spec`;
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${rpt.id}_${rpt.type}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   return (
-    <div className="p-6 space-y-6 font-sans">
+    <div className="p-8 space-y-8 font-sans max-w-7xl mx-auto">
       <PageHeader
         title="Plant Shift Reports & Transition Summaries"
         subtitle="Generate and export automated shift yield, grade change efficiency, and fiber savings reports."
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 font-mono">
-        {/* Report Generator Controls */}
-        <Card className="border-sky-200 dark:border-[#1e2945] bg-white dark:bg-[#0e1424] shadow-xs">
-          <CardHeader className="bg-sky-50/80 dark:bg-[#0b101d] border-b border-sky-100 dark:border-[#1e2945]">
-            <CardTitle className="flex items-center gap-2 text-sky-800 dark:text-sky-300 font-sans">
-              <FileText className="w-4 h-4 text-sky-600 dark:text-sky-400" /> GENERATE NEW REPORT
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 p-5 font-sans">
-            <Select
-              label="Select Report Type"
-              options={[
-                { label: "Shift A Grade Transition Yield Summary", value: "SHIFT_YIELD" },
-                { label: "Monthly Off-Spec Waste Reduction Report", value: "WASTE_REDUCTION" },
-                { label: "AI Closed-Loop Advisory Compliance Log", value: "AI_COMPLIANCE" },
-              ]}
-            />
+      <div className="grid grid-cols-12 gap-6">
+        {/* Report Generator Controls (col-span-4) */}
+        <div className="col-span-12 lg:col-span-4">
+          <Card className="bg-industrial-card border-industrial-border">
+            <CardHeader className="py-4 px-6 border-b border-industrial-border">
+              <CardTitle className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                <FileText className="w-4 h-4 text-blue-400" />
+                Generate New Report
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4 font-sans text-xs">
+              <Select
+                label="Select Report Type"
+                value={reportType}
+                onChange={(e) => setReportType(e.target.value)}
+                options={[
+                  { label: "Shift A Grade Transition Yield Summary", value: "SHIFT_YIELD" },
+                  { label: "Monthly Off-Spec Waste Reduction Report", value: "WASTE_REDUCTION" },
+                  { label: "AI Closed-Loop Advisory Compliance Log", value: "AI_COMPLIANCE" },
+                ]}
+              />
 
-            <Select
-              label="Paper Machine Line"
-              options={[
-                { label: "PM-01 Paper Machine (Fine Writing)", value: "PM-01" },
-                { label: "PM-02 Paper Machine (Linerboard)", value: "PM-02" },
-              ]}
-            />
+              <Select
+                label="Paper Machine Line"
+                options={[
+                  { label: "PM-01 Paper Machine (Fine Writing)", value: "PM-01" },
+                  { label: "PM-02 Paper Machine (Linerboard)", value: "PM-02" },
+                ]}
+              />
 
-            <div className="pt-2 font-mono">
-              <Button
-                variant="cyan"
-                size="sm"
-                className="w-full flex items-center justify-center gap-2 font-mono font-bold"
-                onClick={() => setReportGenerated(true)}
-              >
-                <FileText className="w-4 h-4 text-white" /> GENERATE REPORT JSON/PDF
-              </Button>
-            </div>
-
-            {reportGenerated && (
-              <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs rounded-xl font-mono space-y-1">
-                <div className="font-bold flex items-center gap-1.5 font-sans text-emerald-700 dark:text-emerald-400">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> REPORT GENERATION SUCCESSFUL
-                </div>
-                <div className="text-[11px] font-sans">Shift_A_Yield_Report_20260725.pdf is ready for download.</div>
+              <div className="pt-2">
+                <Button
+                  variant="default"
+                  size="md"
+                  className="w-full flex items-center justify-center gap-2 font-semibold shadow-sm"
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" /> Generating...
+                    </>
+                  ) : (
+                    <>
+                      <FileText className="w-4 h-4" /> Generate Report PDF
+                    </>
+                  )}
+                </Button>
               </div>
-            )}
-          </CardContent>
-        </Card>
 
-        {/* Recent Generated Reports Table (2 cols) */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="font-sans text-slate-800 dark:text-slate-100">RECENT GENERATED REPORTS ARCHIVE</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>REPORT ID</TableHead>
-                  <TableHead>TITLE</TableHead>
-                  <TableHead>TYPE</TableHead>
-                  <TableHead>GENERATED BY</TableHead>
-                  <TableHead>DATE</TableHead>
-                  <TableHead>ACTIONS</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-bold text-sky-700 dark:text-sky-400 font-mono">RPT-901</TableCell>
-                  <TableCell className="font-sans font-semibold text-slate-800 dark:text-slate-200">Shift A Grade Transition Yield Summary</TableCell>
-                  <TableCell className="font-mono text-slate-600 dark:text-slate-400">SHIFT_YIELD</TableCell>
-                  <TableCell className="font-sans text-slate-700 dark:text-slate-300">J. Miller</TableCell>
-                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">2026-07-25</TableCell>
-                  <TableCell className="flex gap-2">
-                    <Button variant="outline" size="sm"><Download className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" /></Button>
-                    <Button variant="ghost" size="sm"><Printer className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" /></Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-bold text-slate-600 dark:text-slate-400 font-mono">RPT-900</TableCell>
-                  <TableCell className="font-sans text-slate-700 dark:text-slate-300">Monthly Off-Spec Waste Reduction</TableCell>
-                  <TableCell className="font-mono text-slate-600 dark:text-slate-400">WASTE_REDUCTION</TableCell>
-                  <TableCell className="font-sans text-slate-700 dark:text-slate-300">S. Chen</TableCell>
-                  <TableCell className="font-mono text-slate-700 dark:text-slate-300">2026-07-24</TableCell>
-                  <TableCell className="flex gap-2">
-                    <Button variant="outline" size="sm"><Download className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" /></Button>
-                    <Button variant="ghost" size="sm"><Printer className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" /></Button>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+              {lastGenerated && (
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-xl space-y-2">
+                  <div className="font-semibold flex items-center gap-1.5 text-xs">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Report Ready for Download
+                  </div>
+                  <div className="text-[11px] text-zinc-300 font-mono">{lastGenerated}</div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Generated Reports Table (col-span-8) */}
+        <div className="col-span-12 lg:col-span-8">
+          <Card className="bg-industrial-card border-industrial-border">
+            <CardHeader className="py-4 px-6 border-b border-industrial-border">
+              <CardTitle className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+                Recent Generated Reports Archive
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0 font-sans">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-industrial-border">
+                    <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Report ID</TableHead>
+                    <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Title</TableHead>
+                    <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Type</TableHead>
+                    <TableHead className="text-xs text-zinc-400 uppercase font-semibold">Date</TableHead>
+                    <TableHead className="text-xs text-zinc-400 uppercase font-semibold text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {reports.map((rpt) => (
+                    <TableRow key={rpt.id} className="border-industrial-border">
+                      <TableCell className="text-xs font-bold text-blue-400">{rpt.id}</TableCell>
+                      <TableCell className="text-xs text-zinc-200 font-medium">{rpt.title}</TableCell>
+                      <TableCell className="text-xs text-zinc-400 font-mono">{rpt.type}</TableCell>
+                      <TableCell className="text-xs text-zinc-400">{rpt.date}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            title="Download Report File"
+                            onClick={() => handleDownload(rpt)}
+                            className="h-8 px-2.5"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            title="Print Report"
+                            onClick={handlePrint}
+                            className="h-8 px-2.5"
+                          >
+                            <Printer className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

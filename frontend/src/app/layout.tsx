@@ -1,6 +1,25 @@
 import type { Metadata } from "next";
+import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import { Providers } from "./providers";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "GradeSense AI | Industrial DCS & Quality Control",
@@ -13,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="bg-slate-50 dark:bg-[#070a11] text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+    <html lang="en" className={`dark ${inter.variable} ${jakarta.variable} ${jetbrainsMono.variable}`}>
+      <body className="bg-[#0b0f19] text-gray-100 antialiased min-h-screen font-sans">
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -1,40 +1,24 @@
 import * as React from "react";
-import { cn, getStatusBadgeColor } from "@/lib/utils";
-import { StatusLevel } from "@/types";
+import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  status?: StatusLevel;
-  variant?: "default" | "cyan" | "outline" | "violet";
+  variant?: "default" | "cyan" | "outline" | "success" | "warning" | "danger";
 }
 
-export function Badge({ className, status, variant = "default", children, ...props }: BadgeProps) {
-  if (status) {
-    return (
-      <span
-        className={cn(
-          "inline-flex items-center px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider border rounded-full shadow-2xs",
-          getStatusBadgeColor(status),
-          className
-        )}
-        {...props}
-      >
-        <span className="w-1.5 h-1.5 rounded-full mr-1.5 bg-current animate-pulse" />
-        {children || status}
-      </span>
-    );
-  }
-
+export function Badge({ className, variant = "default", children, ...props }: BadgeProps) {
   const variants = {
-    default: "bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800 shadow-2xs font-bold",
-    cyan: "bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800 shadow-2xs font-bold",
-    violet: "bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800 shadow-2xs font-bold",
-    outline: "bg-white dark:bg-[#0e1424] text-slate-700 dark:text-slate-300 border-slate-300 dark:border-[#1e2945] font-semibold",
+    default: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    cyan: "bg-zinc-800/80 text-zinc-200 border-zinc-700/60",
+    success: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    warning: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    danger: "bg-red-500/10 text-red-400 border-red-500/20",
+    outline: "bg-transparent text-zinc-400 border-zinc-700",
   };
 
   return (
     <span
       className={cn(
-        "inline-flex items-center px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider border rounded-full shadow-2xs",
+        "inline-flex items-center px-2.5 py-0.5 text-xs font-sans font-semibold border rounded-md transition-colors",
         variants[variant],
         className
       )}
