@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: str = "http://localhost:3000"
 
     # PostgreSQL Database
-    DATABASE_URL: str = "postgresql+asyncpg://gradesense_user:gradesense_secret_password@localhost:5432/gradesense_db"
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:Aarushi%402004@db.bkvejriiauchsfmxjhxs.supabase.co:5432/postgres"
 
     # JWT Authentication
     SECRET_KEY: str = "super_secret_jwt_key_for_industrial_gradesense_ai_2026"

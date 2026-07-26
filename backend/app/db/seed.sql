@@ -34,5 +34,5 @@ INSERT INTO recipes (id, machine_id, paper_grade_id, setpoint_targets) VALUES
 
 -- 6. Seed AI Models
 INSERT INTO ai_models (id, name, version, model_type, accuracy_score, artifact_path) VALUES
-('60000000-0000-0000-0000-000000000001', 'Moisture & Basis Weight Trajectory Predictor', 'v2.4.1-xgboost', 97.6, '/app/models/weights/moisture_v2.4.1.onnx')
+('60000000-0000-0000-0000-000000000001', 'Moisture & Basis Weight Trajectory Predictor', 'v2.4.1-xgboost', 'XGBoostRegressor', 97.6, '/app/models/weights/moisture_v2.4.1.onnx')
 ON CONFLICT (version) DO NOTHING;

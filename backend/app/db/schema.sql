@@ -2,7 +2,7 @@
 -- Production-Ready High-Scale Enterprise Database Structure
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "btree_brin";
+-- BRIN index functionality is built natively into PostgreSQL core
 
 -- Timestamp Auto-Update Trigger Function
 CREATE OR REPLACE FUNCTION update_timestamp_column()
