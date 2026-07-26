@@ -3,30 +3,50 @@
 # 🏭 GradeSense AI
 ### Enterprise Paper Quality Prediction & Prescriptive DCS Control Advisory
 
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-grade--sense--ai.vercel.app-00C7B7?style=for-the-badge&logo=vercel&logoColor=white)](https://grade-sense-ai.vercel.app/dashboard)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Next.js 15](https://img.shields.io/badge/Next.js-15.5-000000.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15.0+-4169E1.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL_15-3FCF8E.svg?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
+[![Render](https://img.shields.io/badge/Render-Backend_Cloud-46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)](https://render.com)
 [![Docker](https://img.shields.io/badge/Docker-Production_Ready-2496ED.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com)
-[![Theme Engine](https://img.shields.io/badge/UI_Theme-Dual_Light_%26_Dark-0284c7.svg?style=for-the-badge&logo=react&logoColor=white)](#-dual-theme-engine)
 
 ---
 
-**GradeSense AI** is a production-grade enterprise predictive quality and prescriptive control platform designed for paper manufacturing facilities. It predicts quality deviations during paper grade transitions, explains root-cause physics using **SHAP (SHapley Additive exPlanations)**, and delivers real-time closed-loop setpoint advisories to minimize off-spec paper waste and transition downtime.
+### 🌐 Live Production Deployment
+**Experience the live industrial control room dashboard:**  
+👉 **[https://grade-sense-ai.vercel.app/dashboard](https://grade-sense-ai.vercel.app/dashboard)**
+
+---
+
+**GradeSense AI** is a production-grade enterprise predictive quality and prescriptive control platform built for paper manufacturing facilities. It predicts quality deviations during paper grade transitions, explains root-cause physics using **SHAP (SHapley Additive exPlanations)**, and delivers real-time closed-loop setpoint advisories to minimize off-spec paper waste and transition downtime.
 
 </div>
 
 ---
 
 ## 📑 Table of Contents
+- [🌐 Live Deployment](#-live-deployment)
 - [🌟 Key Product Capabilities](#-key-product-capabilities)
-- [🎨 Dual Theme Engine](#-dual-theme-engine)
 - [🏗 System Architecture](#-system-architecture)
+- [🎨 Dual Theme Engine](#-dual-theme-engine)
 - [🛠 Technology Stack](#-technology-stack)
 - [📂 Project Directory Structure](#-project-directory-structure)
-- [⚡ Quickstart & Installation](#-quickstart--installation)
+- [⚡ Quickstart & Local Setup](#-quickstart--local-setup)
+- [☁️ Cloud Deployment Stack](#️-cloud-deployment-stack)
 - [🔌 API Endpoints Summary](#-api-endpoints-summary)
-- [📚 Documentation & Resources](#-documentation--resources)
+- [📚 Documentation](#-documentation)
+
+---
+
+## 🌐 Live Deployment
+
+The platform is fully deployed and accessible live:
+
+| Component | Platform | Deployment URL / Connection |
+| :--- | :--- | :--- |
+| **Frontend Dashboard** | **Vercel** | 🔗 [grade-sense-ai.vercel.app/dashboard](https://grade-sense-ai.vercel.app/dashboard) |
+| **Backend & ML Engine** | **Render** | ⚡ `https://gradesense-ai-backend.onrender.com/api/v1` |
+| **Database** | **Supabase** | 🐘 PostgreSQL 15 Managed Instance |
 
 ---
 
@@ -44,17 +64,6 @@
 
 ---
 
-## 🎨 Dual Theme Engine
-
-GradeSense AI features a built-in React Theme Context provider supporting dual color systems tailored for industrial environments:
-
-- **☀️ Light Mode**: Optimized for bright operator offices (`#f8fafc` canvas, `#ffffff` card surfaces, `#0284c7` primary sky blue accents).
-- **🌙 Dark DCS Mode**: Optimized for control room displays (`#070a11` dark canvas, `#0e1424` card surfaces, `#1e2945` high-contrast grid borders).
-
-Operators can switch modes instantly via the top header **Sun/Moon Toggle Button**, with preferences persisted across browser sessions via `localStorage`.
-
----
-
 ## 🏗 System Architecture
 
 ```mermaid
@@ -67,7 +76,7 @@ graph TD
     end
 
     subgraph Core Backend & AI Engine
-        E --> F[(PostgreSQL 15 DB)]
+        E --> F[(Supabase PostgreSQL 15)]
         F --> G[Feature Engineering Engine]
         G --> H[Model Pipeline: XGBoost / LightGBM]
         H --> I[SHAP Explainer Engine]
@@ -86,6 +95,17 @@ graph TD
 
 ---
 
+## 🎨 Dual Theme Engine
+
+GradeSense AI features a built-in React Theme Context provider supporting dual color systems tailored for industrial environments:
+
+- **☀️ Light Mode**: Optimized for bright operator offices (`#f8fafc` canvas, `#ffffff` card surfaces, `#0284c7` primary sky blue accents).
+- **🌙 Dark DCS Mode**: Optimized for control room displays (`#070a11` dark canvas, `#0e1424` card surfaces, `#1e2945` high-contrast grid borders).
+
+Operators can switch modes instantly via the top header **Sun/Moon Toggle Button**, with preferences persisted across browser sessions via `localStorage`.
+
+---
+
 ## 🛠 Technology Stack
 
 ### **Frontend**
@@ -101,9 +121,11 @@ graph TD
 - **Machine Learning**: `scikit-learn`, `xgboost`, `lightgbm`, `shap` (TreeExplainer), `joblib`
 - **Security**: OAuth2 Bearer JWT authentication, bcrypt password hashing
 
-### **Infrastructure**
-- **Reverse Proxy**: Nginx with SSL termination, Gzip compression, and rate limiting
-- **Containerization**: Multi-stage Dockerfiles & Docker Compose orchestration
+### **Cloud & DevOps Infrastructure**
+- **Frontend Hosting**: Vercel
+- **Backend Hosting**: Render Web Service
+- **Database Hosting**: Supabase PostgreSQL
+- **Containerization**: Docker multi-stage builds & Docker Compose orchestration
 
 ---
 
@@ -117,7 +139,7 @@ GradeSense-AI/
 │   │   ├── api/v1/endpoints/   # REST Controllers: Predictions, Simulator, Ingestion, Auth
 │   │   ├── core/               # Configuration, Database sessions, Security
 │   │   ├── crud/               # Database Repositories
-│   │   ├── db/                 # Alembic migrations & DDL schemas
+│   │   ├── db/                 # Database DDL schemas & seed scripts
 │   │   ├── models/             # SQLAlchemy ORM Data Models
 │   │   ├── schemas/            # Pydantic DTO validation schemas
 │   │   └── services/           # Business Logic: Recommendation Engine & ETL Pipeline
@@ -126,52 +148,43 @@ GradeSense-AI/
 │   └── tests/                  # Pytest Unit & Integration tests
 ├── frontend/
 │   ├── src/
-│   │   ├── app/(dashboard)/    # 12 Industrial Operational Dashboard Views
+│   │   ├── app/(dashboard)/    # Operational Dashboard Views
 │   │   ├── components/         # Cards, Gauges, Charts, Modal, Header, Sidebar
 │   │   ├── context/            # React Theme Context (Light / Dark mode engine)
 │   │   ├── lib/                # API helpers & utilities
 │   │   └── styles/             # Global CSS design tokens
 │   └── package.json
-├── docker-compose.yml          # Production container orchestration
+├── docs/                       # Project setup & deployment guides
+├── docker-compose.yml          # Container orchestration
 └── README.md
 ```
 
 ---
 
-## ⚡ Quickstart & Installation
+## ⚡ Quickstart & Local Setup
 
 ### **Prerequisites**
 - Node.js `>= 18.0`
 - Python `>= 3.11`
 - PostgreSQL `>= 15` (or Docker)
 
-### **Option A: Run Locally (Development Mode)**
+### **Option A: Local Development Mode**
 
 #### **1. Backend Setup**
 ```bash
-# Navigate to backend
 cd backend
-
-# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
 
-# Run FastAPI dev server
+# Run FastAPI server
 python -m uvicorn app.main:app --port 8000 --reload
 ```
 
 #### **2. Frontend Setup**
 ```bash
-# Navigate to frontend
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start Next.js dev server
 npm run dev
 ```
 Open **`http://localhost:3000`** in your browser.
@@ -184,7 +197,7 @@ Open **`http://localhost:3000`** in your browser.
 # 1. Clone repository & configure environment
 cp .env.example .env
 
-# 2. Launch production services
+# 2. Launch production stack
 docker-compose up -d --build
 
 # 3. Access Industrial Dashboard
@@ -197,22 +210,23 @@ open http://localhost
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
+| `GET` | `/health` | Service health probe & telemetry status |
 | `POST` | `/api/v1/predictions/predict` | Predict off-spec probability for target grade transition |
-| `POST` | `/api/v1/predictions/explain` | Generate SHAP waterfall & plain-language feature explanations |
+| `POST` | `/api/v1/predictions/explain` | Generate SHAP waterfall & feature attribution explanations |
 | `GET` | `/api/v1/recommendations/` | Fetch active prescriptive process advisories |
 | `POST` | `/api/v1/recommendations/{id}/accept` | Accept advisory & dispatch setpoint to OPC-UA controller |
 | `POST` | `/api/v1/simulator/run` | Execute Digital Twin What-If process simulation |
 | `POST` | `/api/v1/ingestion/upload` | Upload CSV/Excel telemetry for automated ETL processing |
 
-Full interactive API documentation is available at **`http://localhost:8000/docs`** (Swagger UI).
+Interactive API documentation is available at **`http://localhost:8000/docs`** (Swagger UI).
 
 ---
 
-## 📚 Documentation & Resources
+## 📚 Documentation
 
-- 📄 [Installation Guide](file:///c:/Users/Lenovo/Desktop/Honeywell/docs/INSTALLATION.md)
-- 🚀 [Deployment & Production Setup](file:///c:/Users/Lenovo/Desktop/Honeywell/docs/DEPLOYMENT.md)
-- 💾 [Database Backup & Restore Guide](file:///c:/Users/Lenovo/Desktop/Honeywell/docs/DATABASE_BACKUP.md)
+- 📄 [Installation & Setup Guide](docs/INSTALLATION.md)
+- 🚀 [Cloud & Production Deployment Guide](docs/DEPLOYMENT.md)
+- 💾 [Database Backup & Restore Guide](docs/DATABASE_BACKUP.md)
 
 ---
 
