@@ -74,14 +74,14 @@ export default function AlertsCenterPage() {
             <TableBody>
               <TableRow>
                 <TableCell className="font-bold text-red-400">ALT-8801</TableCell>
-                <TableCell><Badge status="CRITICAL">CRITICAL</Badge></TableCell>
+                <TableCell><Badge variant="danger">CRITICAL</Badge></TableCell>
                 <TableCell>MOISTURE_REEL</TableCell>
                 <TableCell className="text-gray-200">Reel moisture deviation predicted +1.4% above spec USL in 4 mins.</TableCell>
                 <TableCell>
                   {acknowledgedList.includes("ALT-8801") ? (
-                    <Badge status="WARNING">ACKNOWLEDGED</Badge>
+                    <Badge variant="warning">ACKNOWLEDGED</Badge>
                   ) : (
-                    <Badge status="CRITICAL">DETECTED</Badge>
+                    <Badge variant="danger">DETECTED</Badge>
                   )}
                 </TableCell>
                 <TableCell>14:12:05 UTC</TableCell>
@@ -100,14 +100,14 @@ export default function AlertsCenterPage() {
 
               <TableRow>
                 <TableCell className="font-bold text-amber-400">ALT-8802</TableCell>
-                <TableCell><Badge status="WARNING">WARNING</Badge></TableCell>
+                <TableCell><Badge variant="warning">WARNING</Badge></TableCell>
                 <TableCell>BASIS_WEIGHT</TableCell>
                 <TableCell className="text-gray-200">Basis weight offset -1.6 g/m² detected at scanner.</TableCell>
                 <TableCell>
                   {acknowledgedList.includes("ALT-8802") ? (
-                    <Badge status="WARNING">ACKNOWLEDGED</Badge>
+                    <Badge variant="warning">ACKNOWLEDGED</Badge>
                   ) : (
-                    <Badge status="WARNING">DETECTED</Badge>
+                    <Badge variant="warning">DETECTED</Badge>
                   )}
                 </TableCell>
                 <TableCell>14:08:22 UTC</TableCell>
