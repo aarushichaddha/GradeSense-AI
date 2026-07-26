@@ -45,8 +45,20 @@ The platform is fully deployed and accessible live:
 | Component | Platform | Deployment URL / Connection |
 | :--- | :--- | :--- |
 | **Frontend Dashboard** | **Vercel** | 🔗 [grade-sense-ai.vercel.app/dashboard](https://grade-sense-ai.vercel.app/dashboard) |
-| **Backend & ML Engine** | **Render** | ⚡ `https://gradesense-ai-backend.onrender.com/api/v1` |
+| **Backend & ML Engine** | **Render** | ⚡ [gradesense-ai.onrender.com/docs](https://gradesense-ai.onrender.com/docs) |
 | **Database** | **Supabase** | 🐘 PostgreSQL 15 Managed Instance |
+
+<br/>
+
+<div align="center">
+
+### 🚀 Production Deployment Status
+
+| Frontend (Vercel) | Backend & ML Engine (Render) |
+| :---: | :---: |
+| ![Vercel Production Deployment](docs/images/vercel_deployment.png) | ![Render Production Deployment](docs/images/render_deployment.png) |
+
+</div>
 
 ---
 
