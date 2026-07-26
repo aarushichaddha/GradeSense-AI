@@ -11,14 +11,14 @@ const config: Config = {
     extend: {
       colors: {
         industrial: {
-          bg: "#f8fafc",
-          card: "#ffffff",
-          panel: "#f1f5f9",
-          border: "#e2e8f0",
+          bg: "#070a11",
+          card: "#0e1424",
+          panel: "#161c2e",
+          border: "#1e2945",
           accent: "#0284c7",
-          text: "#0f172a",
-          muted: "#64748b",
-          // Light Mode Status Colors (WCAG Compliant)
+          text: "#f8fafc",
+          muted: "#94a3b8",
+          // Status Colors (WCAG Compliant)
           normal: "#059669",    // Emerald-600
           warning: "#d97706",   // Amber-600
           critical: "#dc2626",  // Red-600

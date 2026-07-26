@@ -35,15 +35,104 @@
 
 /* Neutral Card Class */
 .saas-card {
-  background-color: #14171f;
-  border: 1px solid #272a34;
+  background-color: #0e1424;
+  border: 1px solid #1e2945;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .saas-card:hover {
-  border-color: #353947;
+  border-color: #2b3b63;
+}
+
+/* Perfect Dark Mode Overrides (Handles Opacity Modifiers) */
+html.dark body,
+html.dark main,
+html.dark .bg-industrial-bg,
+html.dark .bg-industrial-bg\/50,
+html.dark .bg-industrial-bg\/60,
+html.dark .bg-industrial-bg\/80 {
+  background-color: #070a11 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .saas-card,
+html.dark .bg-industrial-card,
+html.dark .bg-industrial-card\/50,
+html.dark .bg-industrial-card\/60,
+html.dark .bg-industrial-card\/80 {
+  background-color: #0e1424 !important;
+  border-color: #1e2945 !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+html.dark .bg-industrial-panel,
+html.dark .bg-industrial-panel\/50,
+html.dark .bg-industrial-panel\/60,
+html.dark .bg-industrial-panel\/80 {
+  background-color: #161c2e !important;
+  border-color: #1e2945 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .border-industrial-border,
+html.dark .border-industrial-border\/50,
+html.dark .border-industrial-border\/70 {
+  border-color: #1e2945 !important;
+}
+
+html.dark header,
+html.dark footer,
+html.dark aside {
+  background-color: #070a11 !important;
+  border-color: #1e2945 !important;
+  color: #f8fafc !important;
+}
+
+html.dark nav a:hover,
+html.dark nav button:hover {
+  background-color: #161c2e !important;
+  color: #ffffff !important;
+}
+
+html.dark nav a:hover svg,
+html.dark nav button:hover svg {
+  color: #38bdf8 !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #0e1424 !important;
+  color: #f8fafc !important;
+  border-color: #1e2945 !important;
+}
+
+html.dark table,
+html.dark thead,
+html.dark tbody,
+html.dark tr,
+html.dark th,
+html.dark td {
+  border-color: #1e2945 !important;
+}
+
+html.dark thead,
+html.dark th {
+  background-color: #161c2e !important;
+  color: #94a3b8 !important;
+}
+
+html.dark tbody,
+html.dark td {
+  background-color: #0e1424 !important;
+  color: #f8fafc !important;
+}
+
+html.dark tr:hover {
+  background-color: #161c2e !important;
 }
 
 /* Perfect Light Mode Overrides (Handles Opacity Modifiers) */
